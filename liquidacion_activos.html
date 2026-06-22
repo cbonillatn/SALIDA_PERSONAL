@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liquidación de Activos — Salida de Personal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:100vh}
+.hdr{background:#1a1a2e;color:#fff;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hdr h1{font-size:14px;font-weight:700;letter-spacing:.3px}
+.hdr-tabs{display:flex}
+.tab-btn{padding:0 18px;height:52px;border:none;background:transparent;color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
+.tab-btn:hover{color:#fff}.tab-btn.active{color:#fff;border-bottom-color:#3b82f6}
+.page{display:none;padding:1.5rem;max-width:1150px;margin:0 auto}.page.active{display:block}
+.upload-zone{background:#fff;border:2px dashed #cbd5e1;border-radius:14px;padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1.25rem}
+.upload-zone:hover,.upload-zone.drag{border-color:#3b82f6;background:#eff6ff}
+.upload-zone .ico{font-size:3rem;margin-bottom:.75rem}
+.upload-zone h2{font-size:16px;font-weight:700;margin-bottom:.4rem}
+.upload-zone p{font-size:13px;color:#64748b}
+#fileInput{display:none}
+.emp-card{background:#1a1a2e;color:#fff;border-radius:12px;padding:1.1rem 1.4rem;margin-bottom:1.1rem;display:none}
+.emp-card.on{display:block}
+.emp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem}
+.ef label{font-size:10px;letter-spacing:.7px;text-transform:uppercase;color:#64748b;display:block;margin-bottom:2px}
+.ef span{font-size:13px;font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.1rem}
+.stat{background:#fff;border-radius:10px;padding:.9rem 1.1rem;border-left:4px solid #3b82f6}
+.stat.red{border-left-color:#e63946}.stat.green{border-left-color:#22c55e}.stat.amber{border-left-color:#f59e0b}
+.stat label{font-size:10px;color:#64748b;letter-spacing:.3px;display:block;margin-bottom:3px}
+.stat .num{font-size:22px;font-weight:800;color:#1a1a2e}
+.stat .sub{font-size:11px;color:#94a3b8;margin-top:2px}
+.btn{padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{opacity:.85}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-dark{background:#1a1a2e;color:#fff}.btn-blue{background:#3b82f6;color:#fff}
+.btn-outline{background:#fff;color:#1a1a2e;border:1.5px solid #cbd5e1}
+.btn-green{background:#15803d;color:#fff}.btn-red{background:#e63946;color:#fff}
+.action-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.tbl-wrap{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead{background:#f8fafc}
+th{padding:9px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#475569;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
+.tfoot-row td{font-weight:700;background:#f8fafc;border-top:2px solid #e2e8f0}
+.mono{font-family:monospace;font-size:11px;color:#475569}
+.serie{font-family:monospace;font-size:11px;color:#7c3aed}
+.cost{text-align:right;font-weight:600;color:#15803d}
+.cost-na{text-align:right;color:#94a3b8;font-style:italic}
+.bdg{display:inline-block;padding:1px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.bdg-new{background:#dbeafe;color:#1e40af}.bdg-used{background:#fef3c7;color:#92400e}
+.controls{background:#fff;border-radius:10px;padding:.85rem 1.1rem;margin-bottom:1.1rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.controls input[type=text]{flex:1;min-width:180px;padding:6px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;outline:none}
+.controls input:focus{border-color:#3b82f6}
+.controls select{padding:6px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;background:#fff;outline:none}
+.progress-wrap{margin-bottom:1rem}
+.progress-bar{height:4px;background:#3b82f6;border-radius:2px;width:0%;transition:width .3s}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:700px){.settings-grid{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:12px;padding:1.25rem 1.4rem;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:1rem}
+.card h3{font-size:13px;font-weight:700;margin-bottom:.85rem;display:flex;align-items:center;gap:6px}
+.field-lbl{font-size:11px;color:#64748b;display:block;margin-bottom:4px;margin-top:.6rem}
+.inp{width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:monospace;outline:none}
+.inp:focus{border-color:#3b82f6}
+.cons-list{max-height:340px;overflow-y:auto;border:1.5px solid #e2e8f0;border-radius:8px;margin-bottom:.75rem}
+.cons-item{display:flex;align-items:center;gap:.5rem;padding:6px 10px;border-bottom:1px solid #f1f5f9;font-size:12px}
+.cons-item:last-child{border-bottom:none}.cons-item:hover{background:#f8fafc}
+.cons-code{font-family:monospace;flex:1;color:#1a1a2e}
+.del-btn{width:20px;height:20px;border-radius:4px;border:none;background:#fee2e2;color:#e63946;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+.del-btn:hover{background:#e63946;color:#fff}
+.add-row{display:flex;gap:.5rem;margin-bottom:.75rem}
+.add-row input{flex:1;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:monospace;outline:none}
+.add-row input:focus{border-color:#3b82f6}
+.sdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.dok{background:#22c55e}.derr{background:#e63946}.didle{background:#94a3b8}
+.dload{background:#3b82f6;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sync-status{font-size:11px;color:#64748b;display:flex;align-items:center;margin-top:.6rem}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a1a2e;color:#fff;padding:.7rem 1.2rem;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.25);transform:translateY(80px);opacity:0;transition:all .3s;z-index:9999;max-width:360px}
+.toast.show{transform:translateY(0);opacity:1}
+.empty{text-align:center;padding:3rem;color:#94a3b8}
+.empty .ico{font-size:2.5rem;margin-bottom:.5rem}
+@media print{.hdr,.action-row,.controls,.upload-zone,.progress-wrap{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>📦 Liquidación de Activos — Salida de Personal</h1>
+  <div class="hdr-tabs">
+    <button class="tab-btn active" onclick="showTab('report',this)">Reporte</button>
+    <button class="tab-btn" onclick="showTab('settings',this)">⚙ Configuración</button>
+  </div>
+</div>
+
+<!-- ═══════ TAB: REPORTE ═══════ -->
+<div id="tab-report" class="page active">
+
+  <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+    <div class="ico">📂</div>
+    <h2>Cargar archivo de artículos del empleado</h2>
+    <p>Arrastra el CSV o haz clic para seleccionarlo</p>
+    <p style="margin-top:.5rem;font-size:11px;color:#94a3b8">Formato: <code>Consulta_de_ArticulosxEmpleado.csv</code> — separador <strong>;</strong></p>
+    <input type="file" id="fileInput" accept=".csv,.txt">
+  </div>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-bar" id="progressBar"></div>
+    <p id="progressMsg" style="font-size:12px;color:#64748b;margin-top:.4rem;text-align:center"></p>
+  </div>
+
+  <div class="emp-card" id="empCard">
+    <div class="emp-grid" id="empGrid"></div>
+  </div>
+
+  <div class="stats" id="statsRow" style="display:none">
+    <div class="stat red"><label>Artículos pendientes</label><div class="num" id="sPend">0</div><div class="sub" id="sPendSub"></div></div>
+    <div class="stat amber"><label>Costo total estimado</label><div class="num" id="sCost">$0</div><div class="sub">con costo en archivo</div></div>
+    <div class="stat"><label>Consumibles eliminados</label><div class="num" id="sCons">0</div><div class="sub">Regla 3</div></div>
+    <div class="stat green"><label>Devueltos eliminados</label><div class="num" id="sRet">0</div><div class="sub">Reglas 1 y 2</div></div>
+  </div>
+
+  <div class="action-row" id="actionRow" style="display:none">
+    <button class="btn btn-green" id="btnXlsx" onclick="downloadExcel()">⬇ Descargar Excel</button>
+    <button class="btn btn-outline" onclick="resetAll()">↩ Nuevo archivo</button>
+    <button class="btn btn-outline" onclick="window.print()">🖨 Imprimir</button>
+  </div>
+
+  <div class="controls" id="controlsRow" style="display:none">
+    <input type="text" id="searchQ" placeholder="Buscar por descripción, código o serie…" oninput="renderTable()">
+    <select id="filterType" onchange="renderTable()">
+      <option value="">Todos</option>
+      <option value="NEW">Solo nuevos (10-)</option>
+      <option value="USED">Solo usados (US-)</option>
+    </select>
+    <select id="sortBy" onchange="renderTable()">
+      <option value="desc">Descripción A→Z</option>
+      <option value="code">Código</option>
+      <option value="cost_d">Costo mayor primero</option>
+      <option value="cost_a">Costo menor primero</option>
+      <option value="date">Fecha</option>
+    </select>
+  </div>
+
+  <div class="tbl-wrap" id="tblWrap" style="display:none">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Fecha</th><th>Cód.Bodega</th><th>Desc. Bodega</th>
+        <th>Tipo Doc.</th><th>N° Doc.</th><th>Código Artículo</th>
+        <th>Descripción</th><th>Serie</th><th>Tipo</th><th>Costo</th>
+      </tr></thead>
+      <tbody id="tblBody"></tbody>
+      <tfoot id="tblFoot"></tfoot>
+    </table>
+  </div>
+
+  <div class="empty" id="emptyState" style="display:none">
+    <div class="ico">✅</div>
+    <p style="font-weight:700;margin-bottom:.25rem">Sin artículos pendientes</p>
+    <p style="font-size:13px">Todos los artículos fueron devueltos según las reglas aplicadas.</p>
+  </div>
+</div>
+
+<!-- ═══════ TAB: CONFIGURACIÓN ═══════ -->
+<div id="tab-settings" class="page">
+  <div class="settings-grid">
+
+    <div class="card">
+      <h3>🔗 Google Sheets — Consumibles</h3>
+      <label class="field-lbl">URL de la hoja de cálculo</label>
+      <input class="inp" id="sheetsUrl" placeholder="https://docs.google.com/spreadsheets/d/...">
+      <label class="field-lbl">Nombre de la pestaña de consumibles</label>
+      <input class="inp" id="sheetsTab" value="CONSUMIBLES" placeholder="CONSUMIBLES">
+      <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
+        <button class="btn btn-blue" onclick="syncFromSheets()">⬇ Cargar desde Sheets</button>
+        <button class="btn btn-dark" onclick="exportForSheets()">⬆ Exportar para Sheets</button>
+      </div>
+      <div class="sync-status" id="syncStatus"><span class="sdot didle"></span>Sin sincronizar</div>
+
+      <hr style="margin:1.1rem 0;border:none;border-top:1px solid #e2e8f0">
+      <h3>💰 Google Sheets — Costos</h3>
+      <label class="field-lbl">Nombre de la pestaña de costos</label>
+      <input class="inp" id="costsTab" value="COSTOS" placeholder="COSTOS">
+      <p style="font-size:11px;color:#94a3b8;margin-top:.4rem">Col A = código artículo · Col D = costo</p>
+      <button class="btn btn-outline" style="margin-top:.75rem" onclick="fetchCosts()">🔍 Consultar costos faltantes</button>
+    </div>
+
+    <div class="card">
+      <h3>🗑 Códigos consumibles <span id="consCount" style="font-weight:400;color:#94a3b8;font-size:12px"></span></h3>
+      <div class="add-row">
+        <input type="text" id="newCodeInput" placeholder="10-XX-XX-XXX  (Enter para agregar)" onkeydown="if(event.key==='Enter')addCode()">
+        <button class="btn btn-dark" onclick="addCode()">+ Agregar</button>
+      </div>
+      <div class="cons-list" id="consList"></div>
+      <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
+        <button class="btn btn-outline" onclick="sortCodes()">↕ Ordenar</button>
+        <button class="btn btn-red" onclick="if(confirm('¿Limpiar toda la lista?'))clearAllCodes()">🗑 Limpiar</button>
+        <button class="btn btn-green" onclick="applyAndSave()">✓ Guardar y aplicar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// STORAGE KEYS
+// ═══════════════════════════════════════════════
+const SK_CONS  = 'liq_consumables_v3';
+const SK_URL   = 'liq_sheets_url';
+const SK_TAB   = 'liq_sheets_tab';
+const SK_CTAB  = 'liq_costs_tab';
+
+const DEFAULT_CONSUMABLES = [
+  '10-01-01-001','10-01-01-003','10-01-01-062','10-01-01-230','10-01-01-231',
+  '10-01-01-242','10-01-07-001','10-01-07-010','10-01-07-019','10-01-07-053',
+  '10-02-01-225','10-03-14-590','10-03-18-054','10-04-01-067','10-04-07-105',
+  '10-04-07-116','10-04-12-065','10-04-22-664','10-06-04-013','10-06-04-015'
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let ST = {
+  consumables: new Set(loadCons()),
+  pending: [],       // processed items for table
+  rawRows: [],       // all parsed data rows
+  meta: {},          // employee header
+  costsDB: {},       // code -> cost from Sheets
+  xlsxBlob: null,
+};
+
+function loadCons() {
+  try { const s=localStorage.getItem(SK_CONS); return s?JSON.parse(s):DEFAULT_CONSUMABLES; } catch{ return DEFAULT_CONSUMABLES; }
+}
+function saveCons() {
+  localStorage.setItem(SK_CONS, JSON.stringify([...ST.consumables]));
+}
+
+// Init settings fields
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('sheetsUrl').value = localStorage.getItem(SK_URL) || 'https://docs.google.com/spreadsheets/d/1oXTeDAlxykRvM32U5akdVqwXknAe1y0s-ZhpstYe-hs';
+  document.getElementById('sheetsTab').value = localStorage.getItem(SK_TAB) || 'CONSUMIBLES';
+  document.getElementById('costsTab').value  = localStorage.getItem(SK_CTAB) || 'COSTOS';
+  renderConsList();
+});
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// CSV PARSING
+// ═══════════════════════════════════════════════
+function splitLine(line, sep) {
+  const res=[]; let cur='', inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"') inQ=!inQ;
+    else if(c===sep && !inQ){ res.push(cur); cur=''; }
+    else cur+=c;
+  }
+  res.push(cur);
+  return res;
+}
+
+function parseCost(v) {
+  if(!v) return null;
+  const n=parseFloat(String(v).replace(/[$, ]/g,''));
+  return isNaN(n)?null:n;
+}
+
+function baseCode(c) {
+  if(!c) return c;
+  if(c.startsWith('10-')) return c.slice(3);
+  if(c.startsWith('US-')) return c.slice(3);
+  return c;
+}
+
+function parseCSVText(text) {
+  const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+
+  // Employee metadata from first 8 lines
+  const meta = {};
+  for(let i=0;i<8;i++){
+    const parts = lines[i].split(';');
+    const k = parts[0].replace(':','').trim();
+    if(k.includes('COMPANIA'))    meta.compania    = (parts[1]||'').trim();
+    if(k.includes('FECHA DESDE')){ meta.fechaDesde=(parts[1]||'').trim(); meta.fechaHasta=(parts[4]||'').trim(); }
+    if(k.startsWith('Empleado')){  meta.id=k.replace('Empleado','').trim(); meta.nombre=(parts[1]||'').trim(); meta.cedula=(parts[4]||'').trim(); meta.estado=(parts[6]||'').trim(); }
+    if(k==='Area ')    meta.area    = (parts[1]||'').trim();
+    if(k==='Depto. ')  meta.depto   = (parts[1]||'').trim();
+    if(k==='Cargo ')   meta.cargo   = (parts[1]||'').trim();
+    if(k==='Oficina ') meta.oficina = (parts[1]||'').trim();
+  }
+
+  // Data rows: header at line index 8, data from line 9+
+  const headerParts = splitLine(lines[8]||'', ';').map(c=>c.trim());
+  const rows = [];
+  for(let i=9;i<lines.length;i++){
+    const raw=lines[i].trim(); if(!raw) continue;
+    const cols=splitLine(raw,';');
+    if(cols.length < 13) continue;
+    const obj={};
+    headerParts.forEach((h,idx)=>{ obj[h]=cols[idx]?.trim()||''; });
+    // Also map by position for safety
+    rows.push({
+      tipoDoc:    cols[0]?.trim()||'',
+      descTipo:   cols[1]?.trim()||'',
+      tipoMov:    cols[2]?.trim()||'',
+      noDoc:      cols[3]?.trim()||'',
+      noSol:      cols[4]?.trim()||'',
+      noFis:      cols[5]?.trim()||'',
+      serieFis:   cols[6]?.trim()||'',
+      fecha:      cols[7]?.trim()||'',
+      codBodega:  cols[8]?.trim()||'',
+      descBodega: cols[9]?.trim()||'',
+      codigo:     cols[10]?.trim()||'',
+      descripcion:cols[11]?.trim()||'',
+      serie:      cols[12]?.trim()||'',
+      costo:      parseCost(cols[13]?.trim()),
+      observacion:cols[14]?.trim()||'',
+    });
+  }
+  return { meta, rows };
+}
+
+// ═══════════════════════════════════════════════
+// APPLY RULES
+// ═══════════════════════════════════════════════
+function applyRules(rows) {
+  // Rule 3: remove consumables
+  const nonCons = rows.filter(r => !ST.consumables.has(r.codigo));
+  const consRemoved = rows.length - nonCons.length;
+
+  const sal = nonCons.filter(r => r.tipoMov === 'SALIDA');
+  const ent = nonCons.filter(r => r.tipoMov === 'ENTRADA');
+
+  // Rule 1: series duplicadas dentro de SALIDAs
+  const serCount = {};
+  for(const r of sal){ if(r.serie && r.serie!=='0') serCount[r.serie]=(serCount[r.serie]||0)+1; }
+  const dupSeries = new Set(Object.keys(serCount).filter(s=>serCount[s]>1));
+
+  // Group by base code
+  const salByBase={}, entByBase={};
+  for(const r of sal){ const b=baseCode(r.codigo); (salByBase[b]=salByBase[b]||[]).push(r); }
+  for(const r of ent){ const b=baseCode(r.codigo); (entByBase[b]=entByBase[b]||[]).push(r); }
+
+  const pending=[];
+  let retRemoved=0;
+
+  for(const b of Object.keys(salByBase)){
+    const sg=salByBase[b];
+    const eg=entByBase[b]||[];
+
+    const hasSeries = sg.some(r=>r.serie && r.serie!=='0' && r.serie!=='nan');
+
+    if(hasSeries){
+      const entSeries=new Set(eg.map(r=>r.serie).filter(s=>s&&s!=='0'));
+      // Serialized items
+      for(const r of sg){
+        const s=r.serie;
+        if(s && s!=='0' && s!=='nan' && s!==''){
+          if(dupSeries.has(s)){ retRemoved++; continue; }  // Rule 1
+          if(entSeries.has(s)){ retRemoved++; continue; }  // Rule 2
+          pending.push(r);
+        }
+      }
+      // Non-serialized in same group
+      const nsSal=sg.filter(r=>!r.serie||r.serie==='0'||r.serie==='nan'||r.serie==='');
+      const nsEnt=eg.filter(r=>!r.serie||r.serie==='0'||r.serie==='nan'||r.serie==='');
+      const net=nsSal.length-nsEnt.length;
+      if(net>0) nsSal.slice(0,net).forEach(r=>pending.push(r));
+      retRemoved+=nsEnt.length;
+    } else {
+      // Count-based
+      const ruled1=sg.filter(r=>dupSeries.has(r.serie));
+      const rest=sg.filter(r=>!dupSeries.has(r.serie));
+      retRemoved+=ruled1.length;
+      const net=rest.length-eg.length;
+      if(net>0) rest.slice(0,net).forEach(r=>pending.push(r));
+      retRemoved+=eg.length;
+    }
+  }
+
+  return { pending, stats:{ total:rows.length, pending:pending.length, consRemoved, retRemoved } };
+}
+
+// ═══════════════════════════════════════════════
+// FILE LOAD
+// ═══════════════════════════════════════════════
+function loadFile(file) {
+  setProgress(true,'Leyendo archivo…',10);
+  const reader=new FileReader();
+  reader.onload = e => {
+    try{
+      setProgress(true,'Analizando movimientos…',40);
+      const { meta, rows } = parseCSVText(e.target.result);
+      ST.meta = meta;
+      ST.rawRows = rows;
+
+      setProgress(true,'Aplicando reglas de depuración…',65);
+      const { pending, stats } = applyRules(rows);
+      ST.pending = pending;
+
+      setProgress(true,'Generando Excel…',85);
+      ST.xlsxBlob = buildExcel(meta, pending);
+
+      setProgress(true,'Listo',100);
+      setTimeout(()=>setProgress(false),400);
+
+      renderEmpCard(meta);
+      renderStatsBar(stats, pending);
+      renderTable();
+
+      document.getElementById('statsRow').style.display='';
+      document.getElementById('actionRow').style.display='flex';
+      document.getElementById('controlsRow').style.display='';
+      document.getElementById('uploadZone').style.display='none';
+      document.getElementById('tblWrap').style.display=pending.length>0?'':'none';
+      document.getElementById('emptyState').style.display=pending.length===0?'':'none';
+
+      showToast(`✅ ${pending.length} artículos pendientes — Excel generado y listo`);
+    } catch(err){
+      setProgress(false);
+      showToast('❌ Error al procesar: '+err.message);
+      console.error(err);
+    }
+  };
+  reader.readAsText(file,'windows-1252');
+}
+
+// ═══════════════════════════════════════════════
+// BUILD EXCEL  (SheetJS)
+// ═══════════════════════════════════════════════
+function buildExcel(meta, pending) {
+  const wb = XLSX.utils.book_new();
+  const ws_data = [];
+
+  // ── Row 1: Company title ──
+  ws_data.push([meta.compania||'EMPRESA']);
+
+  // ── Rows 2-5: Employee info ──
+  ws_data.push(['EMPLEADO:', `#${meta.id||''}  ${meta.nombre||''}`, '', 'CÉDULA:', meta.cedula||'', '', 'ESTADO:', meta.estado||'']);
+  ws_data.push(['ÁREA:', meta.area||'', '', 'CARGO:', meta.cargo||'']);
+  ws_data.push(['DPTO.:', meta.depto||'', '', 'OFICINA:', meta.oficina||'']);
+  ws_data.push(['PERÍODO:', `${meta.fechaDesde||''} — ${meta.fechaHasta||''}`]);
+
+  // ── Row 6: blank ──
+  ws_data.push([]);
+
+  // ── Row 7: column headers ──
+  ws_data.push(['FECHA','CÓD. BODEGA','DESCRIPCIÓN BODEGA','TIPO DOC.','N° DOCUMENTO','CÓDIGO ARTÍCULO','DESCRIPCIÓN ARTÍCULO','SERIE','COSTO ARTÍCULO','CANTIDAD','VALOR A DESCONTAR']);
+
+  // ── Data rows (start at row 8, index 7) ──
+  const dataStart = 9; // 1-based Excel row where data begins
+  for(const r of pending){
+    const costo = r.costo && r.costo>0.01 ? r.costo : (ST.costsDB[r.codigo]||ST.costsDB['10-'+baseCode(r.codigo)]||null);
+    const serie = r.serie && r.serie!=='0' && r.serie!=='nan' ? r.serie : '';
+    ws_data.push([
+      r.fecha, r.codBodega, r.descBodega, r.tipoDoc, r.noDoc,
+      r.codigo, r.descripcion, serie||null, costo||null, 1, null
+    ]);
+  }
+
+  // ── Totals row ──
+  ws_data.push(['TOTAL →','','','','','','','','',
+    { f: `SUM(J${dataStart}:J${dataStart+pending.length-1})` },
+    { f: `SUM(K${dataStart}:K${dataStart+pending.length-1})` }
+  ]);
+
+  const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+  // Set column widths (in chars)
+  ws['!cols'] = [
+    {wch:12},{wch:13},{wch:32},{wch:10},{wch:15},
+    {wch:18},{wch:44},{wch:24},{wch:14},{wch:10},{wch:16}
+  ];
+
+  // Add VALUE formula for each data row
+  for(let i=0;i<pending.length;i++){
+    const rowNum = dataStart + i; // 1-based
+    const cellK  = XLSX.utils.encode_cell({r: rowNum-1, c:10});
+    ws[cellK] = { f: `IFERROR(I${rowNum}*J${rowNum},"")`, t:'n', z:'"$"#,##0.00' };
+  }
+
+  // Number formats for cost and valor columns
+  for(let i=0;i<pending.length;i++){
+    const rowNum = dataStart + i;
+    const cellI = XLSX.utils.encode_cell({r: rowNum-1, c:8});
+    if(ws[cellI] && ws[cellI].v) ws[cellI].z = '"$"#,##0.00';
+    const cellK = XLSX.utils.encode_cell({r: rowNum-1, c:10});
+    if(ws[cellK]) ws[cellK].z = '"$"#,##0.00';
+  }
+
+  // Merges
+  ws['!merges'] = [
+    {s:{r:0,c:0},e:{r:0,c:10}},   // Row 1: title
+    {s:{r:6,c:0},e:{r:6,c:10}},   // Row 7 total label (approximate)
+  ];
+
+  // Freeze panes below header
+  ws['!freeze'] = { xSplit:0, ySplit:8 };
+
+  // Row heights (approximate via custom)
+  ws['!rows'] = [
+    {hpt:30},{hpt:16},{hpt:16},{hpt:16},{hpt:16},{hpt:6},{hpt:24}
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Artículos Pendientes');
+
+  // Write as array buffer
+  const buf = XLSX.write(wb, { bookType:'xlsx', type:'array' });
+  return new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+
+function downloadExcel() {
+  if(!ST.xlsxBlob){ showToast('⚠️ Carga un archivo primero'); return; }
+  const nombre=(ST.meta.nombre||'empleado').replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(ST.xlsxBlob);
+  a.download=`Pendientes_${nombre}.xlsx`;
+  a.click();
+}
+
+// ═══════════════════════════════════════════════
+// FETCH COSTS FROM SHEETS
+// ═══════════════════════════════════════════════
+async function fetchCosts() {
+  const url = document.getElementById('sheetsUrl').value.trim();
+  const tab = document.getElementById('costsTab').value.trim()||'COSTOS';
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(!m){ showToast('❌ URL inválida'); return; }
+  const csvUrl=`https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
+  try{
+    const res=await fetch(csvUrl);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    let filled=0;
+    for(const line of text.split('\n')){
+      const parts=line.replace(/"/g,'').split(',');
+      const code=parts[0]?.trim(); const cost=parseFloat(parts[3]?.trim());
+      if(code && !isNaN(cost)){ ST.costsDB[code]=cost; }
+    }
+    // Apply to pending
+    for(const r of ST.pending){
+      if(!r.costo||r.costo<=0.01){
+        const c=ST.costsDB[r.codigo]||ST.costsDB['10-'+baseCode(r.codigo)];
+        if(c!==undefined){ r.costo=c; filled++; }
+      }
+    }
+    // Rebuild Excel with updated costs
+    ST.xlsxBlob = buildExcel(ST.meta, ST.pending);
+    renderTable();
+    showToast(`✅ ${filled} costos actualizados desde Sheets — Excel regenerado`);
+  } catch(e){
+    showToast('❌ No se pudo leer Sheets: '+e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════
+function renderEmpCard(m){
+  const fields=[['Empleado',`#${m.id||''} ${m.nombre||''}`],['Cédula',m.cedula||'—'],['Estado',m.estado||'—'],['Área',m.area||'—'],['Cargo',m.cargo||'—'],['Oficina',m.oficina||'—'],['Período',`${m.fechaDesde||''} → ${m.fechaHasta||''}`]];
+  document.getElementById('empGrid').innerHTML=fields.map(([l,v])=>`<div class="ef"><label>${l}</label><span>${v}</span></div>`).join('');
+  document.getElementById('empCard').classList.add('on');
+}
+
+function renderStatsBar(stats, pending){
+  const total=pending.reduce((s,r)=>s+(r.costo&&r.costo>0.01?r.costo:0),0);
+  document.getElementById('sPend').textContent=stats.pending;
+  document.getElementById('sPendSub').textContent=`de ${stats.total} movimientos totales`;
+  document.getElementById('sCost').textContent='$'+total.toFixed(2);
+  document.getElementById('sCons').textContent=stats.consRemoved;
+  document.getElementById('sRet').textContent=stats.retRemoved;
+}
+
+function renderTable(){
+  const q=document.getElementById('searchQ').value.toLowerCase();
+  const ft=document.getElementById('filterType').value;
+  const sb=document.getElementById('sortBy').value;
+
+  let items=[...ST.pending].filter(r=>{
+    const mq=!q||r.descripcion?.toLowerCase().includes(q)||r.codigo?.toLowerCase().includes(q)||r.serie?.toLowerCase().includes(q);
+    const mt=!ft||(ft==='NEW'&&r.codigo?.startsWith('10-'))||(ft==='USED'&&r.codigo?.startsWith('US-'));
+    return mq&&mt;
+  });
+
+  items.sort((a,b)=>{
+    if(sb==='desc')   return (a.descripcion||'').localeCompare(b.descripcion||'');
+    if(sb==='code')   return (a.codigo||'').localeCompare(b.codigo||'');
+    if(sb==='cost_d') return (b.costo||0)-(a.costo||0);
+    if(sb==='cost_a') return (a.costo||0)-(b.costo||0);
+    if(sb==='date')   return (a.fecha||'').localeCompare(b.fecha||'');
+    return 0;
+  });
+
+  let total=0, missing=0;
+  document.getElementById('tblBody').innerHTML=items.map((r,i)=>{
+    const tipo=r.codigo?.startsWith('10-')?'<span class="bdg bdg-new">NUEVO</span>':'<span class="bdg bdg-used">USADO</span>';
+    const serie=r.serie&&r.serie!=='0'&&r.serie!=='nan'?`<span class="serie">${r.serie}</span>`:'<span style="color:#cbd5e1">—</span>';
+    let costHtml;
+    if(r.costo&&r.costo>0.01){ total+=r.costo; costHtml=`<td class="cost">$${r.costo.toFixed(2)}</td>`; }
+    else{ missing++; costHtml=`<td class="cost-na">—</td>`; }
+    return `<tr>
+      <td style="color:#94a3b8;font-size:11px">${i+1}</td>
+      <td style="font-size:11px;white-space:nowrap">${r.fecha}</td>
+      <td class="mono">${r.codBodega}</td>
+      <td style="font-size:11px">${r.descBodega}</td>
+      <td style="font-size:11px;text-align:center">${r.tipoDoc}</td>
+      <td class="mono" style="text-align:center">${r.noDoc}</td>
+      <td class="mono">${r.codigo}</td>
+      <td style="max-width:240px;word-break:break-word">${r.descripcion}</td>
+      <td>${serie}</td>
+      <td>${tipo}</td>
+      ${costHtml}
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tblFoot').innerHTML=`<tr class="tfoot-row">
+    <td colspan="10" style="font-size:12px;padding:9px 10px">Total: ${items.length} artículos${missing?` (${missing} sin costo)`:''}
+    </td><td class="cost">$${total.toFixed(2)}</td>
+  </tr>`;
+}
+
+// ═══════════════════════════════════════════════
+// CONSUMABLES SETTINGS
+// ═══════════════════════════════════════════════
+function renderConsList(){
+  const list=[...ST.consumables].sort();
+  document.getElementById('consCount').textContent=`(${list.length})`;
+  document.getElementById('consList').innerHTML=list.length===0
+    ?'<div style="padding:1rem;text-align:center;color:#94a3b8;font-size:12px">Lista vacía</div>'
+    :list.map(c=>`<div class="cons-item"><span class="cons-code">${c}</span><button class="del-btn" onclick="removeCode('${c}')">×</button></div>`).join('');
+}
+
+function addCode(){
+  const inp=document.getElementById('newCodeInput');
+  const codes=inp.value.split(/[\s,;]+/).map(s=>s.trim()).filter(Boolean);
+  let added=0;
+  for(const c of codes){ if(!ST.consumables.has(c)){ ST.consumables.add(c); added++; } }
+  inp.value=''; renderConsList();
+  if(added) showToast(`✓ ${added} código(s) agregado(s)`);
+}
+
+function removeCode(c){ ST.consumables.delete(c); renderConsList(); }
+function clearAllCodes(){ ST.consumables.clear(); renderConsList(); }
+function sortCodes(){ ST.consumables=new Set([...ST.consumables].sort()); renderConsList(); }
+
+function applyAndSave(){
+  saveCons();
+  // Re-process if file is loaded
+  if(ST.rawRows.length>0){
+    const {pending,stats}=applyRules(ST.rawRows);
+    ST.pending=pending;
+    ST.xlsxBlob=buildExcel(ST.meta,pending);
+    renderStatsBar(stats,pending);
+    renderTable();
+    showToast('✅ Cambios guardados y reporte actualizado');
+  } else {
+    showToast('✅ Cambios guardados. Se aplicarán al cargar el próximo archivo.');
+  }
+}
+
+// ═══════════════════════════════════════════════
+// GOOGLE SHEETS SYNC (consumibles)
+// ═══════════════════════════════════════════════
+function setSyncStatus(type,msg){
+  const cls={ok:'dok',err:'derr',loading:'dload',idle:'didle'}[type]||'didle';
+  document.getElementById('syncStatus').innerHTML=`<span class="sdot ${cls}"></span>${msg}`;
+}
+
+async function syncFromSheets(){
+  const url=document.getElementById('sheetsUrl').value.trim();
+  const tab=document.getElementById('sheetsTab').value.trim()||'CONSUMIBLES';
+  const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(!m){ showToast('❌ URL inválida'); return; }
+  localStorage.setItem(SK_URL,url); localStorage.setItem(SK_TAB,tab);
+  const csvUrl=`https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
+  setSyncStatus('loading','Cargando desde Sheets…');
+  try{
+    const res=await fetch(csvUrl);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    const codes=text.split('\n').map(l=>l.replace(/"/g,'').split(',')[0].trim()).filter(c=>c&&/^\d{2}-/.test(c));
+    ST.consumables=new Set(codes);
+    saveCons(); renderConsList();
+    setSyncStatus('ok',`${codes.length} códigos cargados — ${new Date().toLocaleTimeString()}`);
+    showToast(`✅ ${codes.length} consumibles cargados desde Sheets`);
+  } catch(e){
+    setSyncStatus('err','Error: '+e.message);
+    showToast('❌ No se pudo leer la hoja. Verifique URL y que sea pública.');
+  }
+}
+
+function exportForSheets(){
+  // Export codes as CSV for manual upload to Sheets
+  const codes=[...ST.consumables].sort();
+  const csv='CODIGO\n'+codes.join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='consumibles.csv'; a.click();
+  showToast('📄 CSV descargado — súbelo a la pestaña CONSUMIBLES de tu Google Sheet');
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════
+function setProgress(on, msg='', pct=0){
+  document.getElementById('progressWrap').style.display=on?'':'none';
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressMsg').textContent=msg||'';
+}
+
+// ═══════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════
+function resetAll(){
+  ST.pending=[]; ST.rawRows=[]; ST.meta={}; ST.xlsxBlob=null; ST.costsDB={};
+  document.getElementById('uploadZone').style.display='';
+  document.getElementById('empCard').classList.remove('on');
+  document.getElementById('statsRow').style.display='none';
+  document.getElementById('actionRow').style.display='none';
+  document.getElementById('controlsRow').style.display='none';
+  document.getElementById('tblWrap').style.display='none';
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('searchQ').value='';
+  document.getElementById('fileInput').value='';
+}
+
+// ═══════════════════════════════════════════════
+// DRAG & DROP
+// ═══════════════════════════════════════════════
+const uz=document.getElementById('uploadZone');
+const fi=document.getElementById('fileInput');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)loadFile(f);});
+fi.addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
+
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+let _tt;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),4000);
+}
+</script>
+</body>
+</html>
