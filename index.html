@@ -149,6 +149,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
         <th>#</th><th>Fecha</th><th>Cód.Bodega</th><th>Desc. Bodega</th>
         <th>Tipo Doc.</th><th>N° Doc.</th><th>Código Artículo</th>
         <th>Descripción</th><th>Serie</th><th>Tipo</th><th>Costo</th>
+        <th title="Marcar código como consumible para futuros archivos">Consumible</th>
       </tr></thead>
       <tbody id="tblBody"></tbody>
       <tfoot id="tblFoot"></tfoot>
@@ -183,7 +184,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
       <label class="field-lbl">Nombre de la pestaña de costos</label>
       <input class="inp" id="costsTab" value="COSTOS" placeholder="COSTOS">
       <p style="font-size:11px;color:#94a3b8;margin-top:.4rem">Col A = código artículo · Col D = costo</p>
-      <button class="btn btn-outline" style="margin-top:.75rem" onclick="fetchCosts()">🔍 Consultar costos faltantes</button>
+      <button class="btn btn-outline" id="btnFetchCosts" style="margin-top:.75rem" onclick="fetchCosts()">🔍 Consultar costos faltantes</button>
     </div>
 
     <div class="card">
@@ -533,37 +534,59 @@ function downloadExcel() {
 }
 
 // ═══════════════════════════════════════════════
-// FETCH COSTS FROM SHEETS
+// FETCH COSTS FROM SHEETS  (via CORS proxy)
 // ═══════════════════════════════════════════════
 async function fetchCosts() {
   const url = document.getElementById('sheetsUrl').value.trim();
   const tab = document.getElementById('costsTab').value.trim()||'COSTOS';
   const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if(!m){ showToast('❌ URL inválida'); return; }
-  const csvUrl=`https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
-  try{
-    const res=await fetch(csvUrl);
+
+  const sheetId = m[1];
+  // Try direct gviz first, then fallback to CORS proxy
+  const directUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
+  const proxyUrl  = `https://api.allorigins.win/get?url=${encodeURIComponent(directUrl)}`;
+
+  const btn = document.getElementById('btnFetchCosts');
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Consultando…'; }
+
+  async function tryFetch(u, isProxy){
+    const res = await fetch(u);
     if(!res.ok) throw new Error('HTTP '+res.status);
-    const text=await res.text();
+    if(isProxy){
+      const json = await res.json();
+      return json.contents||'';
+    }
+    return await res.text();
+  }
+
+  try{
+    let text='';
+    try{ text = await tryFetch(directUrl, false); }
+    catch{ text = await tryFetch(proxyUrl, true); }
+
     let filled=0;
     for(const line of text.split('\n')){
       const parts=line.replace(/"/g,'').split(',');
-      const code=parts[0]?.trim(); const cost=parseFloat(parts[3]?.trim());
+      const code=parts[0]?.trim();
+      const cost=parseFloat((parts[3]||parts[1]||'').trim());
       if(code && !isNaN(cost)){ ST.costsDB[code]=cost; }
     }
-    // Apply to pending
+    // Apply to pending items missing cost
     for(const r of ST.pending){
       if(!r.costo||r.costo<=0.01){
         const c=ST.costsDB[r.codigo]||ST.costsDB['10-'+baseCode(r.codigo)];
-        if(c!==undefined){ r.costo=c; filled++; }
+        if(c!==undefined){ r.costo=c; r.costoFromDB=true; filled++; }
       }
     }
-    // Rebuild Excel with updated costs
     ST.xlsxBlob = buildExcel(ST.meta, ST.pending);
     renderTable();
     showToast(`✅ ${filled} costos actualizados desde Sheets — Excel regenerado`);
   } catch(e){
-    showToast('❌ No se pudo leer Sheets: '+e.message);
+    showToast('❌ No se pudo leer Sheets. Verifica que la hoja sea pública (Compartir → Cualquier persona con el enlace).');
+    console.error(e);
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='🔍 Consultar costos faltantes'; }
   }
 }
 
@@ -609,10 +632,19 @@ function renderTable(){
   document.getElementById('tblBody').innerHTML=items.map((r,i)=>{
     const tipo=r.codigo?.startsWith('10-')?'<span class="bdg bdg-new">NUEVO</span>':'<span class="bdg bdg-used">USADO</span>';
     const serie=r.serie&&r.serie!=='0'&&r.serie!=='nan'?`<span class="serie">${r.serie}</span>`:'<span style="color:#cbd5e1">—</span>';
+    const codeEsc=r.codigo.replace(/'/g,"\\'");
     let costHtml;
     if(r.costo&&r.costo>0.01){ total+=r.costo; costHtml=`<td class="cost">$${r.costo.toFixed(2)}</td>`; }
     else{ missing++; costHtml=`<td class="cost-na">—</td>`; }
-    return `<tr>
+    const consBtnHtml=`<td style="text-align:center">
+      <button onclick="markAsConsumable('${codeEsc}')" title="Marcar ${r.codigo} como consumible y quitar de la lista"
+        style="border:none;background:#fef3c7;color:#92400e;border-radius:5px;padding:3px 8px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap"
+        onmouseover="this.style.background='#f59e0b';this.style.color='#fff'"
+        onmouseout="this.style.background='#fef3c7';this.style.color='#92400e'">
+        🗑 consumible
+      </button>
+    </td>`;
+    return `<tr id="row-${r.codigo.replace(/[^a-z0-9]/gi,'_')}-${i}">
       <td style="color:#94a3b8;font-size:11px">${i+1}</td>
       <td style="font-size:11px;white-space:nowrap">${r.fecha}</td>
       <td class="mono">${r.codBodega}</td>
@@ -620,15 +652,16 @@ function renderTable(){
       <td style="font-size:11px;text-align:center">${r.tipoDoc}</td>
       <td class="mono" style="text-align:center">${r.noDoc}</td>
       <td class="mono">${r.codigo}</td>
-      <td style="max-width:240px;word-break:break-word">${r.descripcion}</td>
+      <td style="max-width:220px;word-break:break-word">${r.descripcion}</td>
       <td>${serie}</td>
       <td>${tipo}</td>
       ${costHtml}
+      ${consBtnHtml}
     </tr>`;
   }).join('');
 
   document.getElementById('tblFoot').innerHTML=`<tr class="tfoot-row">
-    <td colspan="10" style="font-size:12px;padding:9px 10px">Total: ${items.length} artículos${missing?` (${missing} sin costo)`:''}
+    <td colspan="11" style="font-size:12px;padding:9px 10px">Total: ${items.length} artículos${missing?` (${missing} sin costo)`:''}
     </td><td class="cost">$${total.toFixed(2)}</td>
   </tr>`;
 }
@@ -656,6 +689,29 @@ function addCode(){
 function removeCode(c){ ST.consumables.delete(c); renderConsList(); }
 function clearAllCodes(){ ST.consumables.clear(); renderConsList(); }
 function sortCodes(){ ST.consumables=new Set([...ST.consumables].sort()); renderConsList(); }
+
+function markAsConsumable(codigo) {
+  // Normalize: always store the 10- version
+  const code10 = codigo.startsWith('US-') ? '10-'+codigo.slice(3) : codigo;
+
+  // Add to consumables set and save
+  ST.consumables.add(code10);
+  saveCons();
+  renderConsList();
+
+  // Remove ALL rows with this base code from pending (both 10- and US- variants)
+  const base = baseCode(codigo);
+  ST.pending = ST.pending.filter(r => baseCode(r.codigo) !== base);
+
+  // Rebuild Excel and re-render
+  ST.xlsxBlob = buildExcel(ST.meta, ST.pending);
+  renderTable();
+
+  // Update stats counter
+  document.getElementById('sPend').textContent = ST.pending.length;
+
+  showToast(`🗑 "${code10}" agregado a consumibles y quitado del reporte`);
+}
 
 function applyAndSave(){
   saveCons();
