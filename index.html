@@ -543,27 +543,23 @@ async function fetchCosts() {
   if(!m){ showToast('❌ URL inválida'); return; }
 
   const sheetId = m[1];
-  // Try direct gviz first, then fallback to CORS proxy
   const directUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
   const proxyUrl  = `https://api.allorigins.win/get?url=${encodeURIComponent(directUrl)}`;
 
   const btn = document.getElementById('btnFetchCosts');
   if(btn){ btn.disabled=true; btn.textContent='⏳ Consultando…'; }
 
-  async function tryFetch(u, isProxy){
-    const res = await fetch(u);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    if(isProxy){
-      const json = await res.json();
-      return json.contents||'';
-    }
-    return await res.text();
-  }
-
   try{
     let text='';
-    try{ text = await tryFetch(directUrl, false); }
-    catch{ text = await tryFetch(proxyUrl, true); }
+    // Always go through proxy to avoid CORS/redirect issues
+    const res = await fetch(proxyUrl);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const json = await res.json();
+    text = json.contents||'';
+    // If Google redirected to login, contents will contain "ServiceLogin"
+    if(text.includes('ServiceLogin') || text.includes('accounts.google.com')){
+      throw new Error('La hoja no es pública. Compartela como "Cualquier persona con el enlace puede ver".');
+    }
 
     let filled=0;
     for(const line of text.split('\n')){
@@ -743,11 +739,16 @@ async function syncFromSheets(){
   if(!m){ showToast('❌ URL inválida'); return; }
   localStorage.setItem(SK_URL,url); localStorage.setItem(SK_TAB,tab);
   const csvUrl=`https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
+  const proxyConsUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(csvUrl)}`;
   setSyncStatus('loading','Cargando desde Sheets…');
   try{
-    const res=await fetch(csvUrl);
+    const res=await fetch(proxyConsUrl);
     if(!res.ok) throw new Error('HTTP '+res.status);
-    const text=await res.text();
+    const json=await res.json();
+    const text=json.contents||'';
+    if(text.includes('ServiceLogin')||text.includes('accounts.google.com')){
+      throw new Error('La hoja no es pública. Compartela como "Cualquier persona con el enlace puede ver".');
+    }
     const codes=text.split('\n').map(l=>l.replace(/"/g,'').split(',')[0].trim()).filter(c=>c&&/^\d{2}-/.test(c));
     ST.consumables=new Set(codes);
     saveCons(); renderConsList();
