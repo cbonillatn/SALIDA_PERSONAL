@@ -13,7 +13,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .hdr-tabs{display:flex}
 .tab-btn{padding:0 18px;height:52px;border:none;background:transparent;color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
 .tab-btn:hover{color:#fff}.tab-btn.active{color:#fff;border-bottom-color:#3b82f6}
-.page{display:none;padding:1.5rem;max-width:1150px;margin:0 auto}.page.active{display:block}
+.page{display:none;padding:1.5rem;max-width:1200px;margin:0 auto}.page.active{display:block}
 .upload-zone{background:#fff;border:2px dashed #cbd5e1;border-radius:14px;padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1.25rem}
 .upload-zone:hover,.upload-zone.drag{border-color:#3b82f6;background:#eff6ff}
 .upload-zone .ico{font-size:3rem;margin-bottom:.75rem}
@@ -25,9 +25,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .emp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem}
 .ef label{font-size:10px;letter-spacing:.7px;text-transform:uppercase;color:#64748b;display:block;margin-bottom:2px}
 .ef span{font-size:13px;font-weight:500}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.1rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.1rem}
 .stat{background:#fff;border-radius:10px;padding:.9rem 1.1rem;border-left:4px solid #3b82f6}
-.stat.red{border-left-color:#e63946}.stat.green{border-left-color:#22c55e}.stat.amber{border-left-color:#f59e0b}
+.stat.red{border-left-color:#e63946}.stat.green{border-left-color:#22c55e}.stat.amber{border-left-color:#f59e0b}.stat.purple{border-left-color:#7c3aed}
 .stat label{font-size:10px;color:#64748b;letter-spacing:.3px;display:block;margin-bottom:3px}
 .stat .num{font-size:22px;font-weight:800;color:#1a1a2e}
 .stat .sub{font-size:11px;color:#94a3b8;margin-top:2px}
@@ -48,36 +48,64 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
 .serie{font-family:monospace;font-size:11px;color:#7c3aed}
 .cost{text-align:right;font-weight:600;color:#15803d}
 .cost-na{text-align:right;color:#94a3b8;font-style:italic}
-.bdg{display:inline-block;padding:1px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.bdg{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
 .bdg-new{background:#dbeafe;color:#1e40af}.bdg-used{background:#fef3c7;color:#92400e}
+.bdg-exc{background:#dcfce7;color:#15803d}.bdg-cat{background:#f3e8ff;color:#7c3aed}
 .controls{background:#fff;border-radius:10px;padding:.85rem 1.1rem;margin-bottom:1.1rem;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
 .controls input[type=text]{flex:1;min-width:180px;padding:6px 11px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;outline:none}
 .controls input:focus{border-color:#3b82f6}
 .controls select{padding:6px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;background:#fff;outline:none}
 .progress-wrap{margin-bottom:1rem}
 .progress-bar{height:4px;background:#3b82f6;border-radius:2px;width:0%;transition:width .3s}
-.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-@media(max-width:700px){.settings-grid{grid-template-columns:1fr}}
+/* SETTINGS */
+.cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:750px){.cfg-grid{grid-template-columns:1fr}}
 .card{background:#fff;border-radius:12px;padding:1.25rem 1.4rem;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:1rem}
 .card h3{font-size:13px;font-weight:700;margin-bottom:.85rem;display:flex;align-items:center;gap:6px}
-.field-lbl{font-size:11px;color:#64748b;display:block;margin-bottom:4px;margin-top:.6rem}
-.inp{width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:monospace;outline:none}
+.field-lbl{font-size:11px;color:#64748b;display:block;margin-bottom:4px;margin-top:.7rem}
+.inp{width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none}
 .inp:focus{border-color:#3b82f6}
-.cons-list{max-height:340px;overflow-y:auto;border:1.5px solid #e2e8f0;border-radius:8px;margin-bottom:.75rem}
+.inp-mono{font-family:monospace}
+/* rule list */
+.rule-list{border:1.5px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:.75rem}
+.rule-item{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:.5rem;padding:7px 10px;border-bottom:1px solid #f1f5f9;font-size:12px}
+.rule-item:last-child{border-bottom:none}.rule-item:hover{background:#f8fafc}
+.rule-name{font-weight:600;color:#1a1a2e}
+.rule-kw{font-family:monospace;font-size:10px;color:#7c3aed;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rule-thr{font-size:11px;color:#f59e0b;font-weight:600;white-space:nowrap}
+.rule-exc{font-size:10px;background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:20px;font-weight:700;white-space:nowrap}
+.toggle-btn{width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-btn.on{background:#22c55e}.toggle-btn.off{background:#cbd5e1}
+.toggle-btn::after{content:'';position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle-btn.on::after{left:18px}.toggle-btn.off::after{left:2px}
+.del-rule{width:22px;height:22px;border-radius:4px;border:none;background:#fee2e2;color:#e63946;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.del-rule:hover{background:#e63946;color:#fff}
+/* cons list */
+.cons-list{max-height:260px;overflow-y:auto;border:1.5px solid #e2e8f0;border-radius:8px;margin-bottom:.75rem}
 .cons-item{display:flex;align-items:center;gap:.5rem;padding:6px 10px;border-bottom:1px solid #f1f5f9;font-size:12px}
 .cons-item:last-child{border-bottom:none}.cons-item:hover{background:#f8fafc}
-.cons-code{font-family:monospace;flex:1;color:#1a1a2e}
-.del-btn{width:20px;height:20px;border-radius:4px;border:none;background:#fee2e2;color:#e63946;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+.cons-code{font-family:monospace;flex:1}.del-btn{width:20px;height:20px;border-radius:4px;border:none;background:#fee2e2;color:#e63946;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
 .del-btn:hover{background:#e63946;color:#fff}
 .add-row{display:flex;gap:.5rem;margin-bottom:.75rem}
 .add-row input{flex:1;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:monospace;outline:none}
 .add-row input:focus{border-color:#3b82f6}
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;display:none}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.5rem;width:480px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:1rem}
+.modal label{font-size:11px;color:#64748b;display:block;margin-bottom:3px;margin-top:.7rem}
+.modal input,.modal textarea,.modal select{width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none;margin-bottom:.25rem}
+.modal input:focus,.modal textarea:focus,.modal select:focus{border-color:#3b82f6}
+.modal textarea{font-family:monospace;min-height:70px;resize:vertical}
+.modal-btns{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
+/* sync */
 .sdot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
-.dok{background:#22c55e}.derr{background:#e63946}.didle{background:#94a3b8}
-.dload{background:#3b82f6;animation:pulse .8s infinite}
+.dok{background:#22c55e}.derr{background:#e63946}.didle{background:#94a3b8}.dload{background:#3b82f6;animation:pulse .8s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .sync-status{font-size:11px;color:#64748b;display:flex;align-items:center;margin-top:.6rem}
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a1a2e;color:#fff;padding:.7rem 1.2rem;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.25);transform:translateY(80px);opacity:0;transition:all .3s;z-index:9999;max-width:360px}
+/* toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a1a2e;color:#fff;padding:.7rem 1.2rem;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.25);transform:translateY(80px);opacity:0;transition:all .3s;z-index:9999;max-width:380px}
 .toast.show{transform:translateY(0);opacity:1}
 .empty{text-align:center;padding:3rem;color:#94a3b8}
 .empty .ico{font-size:2.5rem;margin-bottom:.5rem}
@@ -94,7 +122,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
   </div>
 </div>
 
-<!-- ═══════ TAB: REPORTE ═══════ -->
+<!-- ══════════════════ TAB: REPORTE ══════════════════ -->
 <div id="tab-report" class="page active">
 
   <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
@@ -110,19 +138,18 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
     <p id="progressMsg" style="font-size:12px;color:#64748b;margin-top:.4rem;text-align:center"></p>
   </div>
 
-  <div class="emp-card" id="empCard">
-    <div class="emp-grid" id="empGrid"></div>
-  </div>
+  <div class="emp-card" id="empCard"><div class="emp-grid" id="empGrid"></div></div>
 
   <div class="stats" id="statsRow" style="display:none">
-    <div class="stat red"><label>Artículos pendientes</label><div class="num" id="sPend">0</div><div class="sub" id="sPendSub"></div></div>
-    <div class="stat amber"><label>Costo total estimado</label><div class="num" id="sCost">$0</div><div class="sub">con costo en archivo</div></div>
-    <div class="stat"><label>Consumibles eliminados</label><div class="num" id="sCons">0</div><div class="sub">Regla 3</div></div>
-    <div class="stat green"><label>Devueltos eliminados</label><div class="num" id="sRet">0</div><div class="sub">Reglas 1 y 2</div></div>
+    <div class="stat red"><label>Pendientes de devolución</label><div class="num" id="sPend">0</div><div class="sub" id="sPendSub"></div></div>
+    <div class="stat amber"><label>Valor total estimado</label><div class="num" id="sCost">$0</div><div class="sub" id="sCostSub">con costo</div></div>
+    <div class="stat purple"><label>Excluidos por antigüedad</label><div class="num" id="sAge">0</div><div class="sub">Paso 1 · +5 años</div></div>
+    <div class="stat"><label>Excluidos por categoría</label><div class="num" id="sCat">0</div><div class="sub">Paso 2 · bajo valor</div></div>
+    <div class="stat green"><label>Devueltos / cancelados</label><div class="num" id="sRet">0</div><div class="sub">Reglas series/pares</div></div>
   </div>
 
   <div class="action-row" id="actionRow" style="display:none">
-    <button class="btn btn-green" id="btnXlsx" onclick="downloadExcel()">⬇ Descargar Excel</button>
+    <button class="btn btn-green" onclick="downloadExcel()">⬇ Descargar Excel</button>
     <button class="btn btn-outline" onclick="resetAll()">↩ Nuevo archivo</button>
     <button class="btn btn-outline" onclick="window.print()">🖨 Imprimir</button>
   </div>
@@ -133,6 +160,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
       <option value="">Todos</option>
       <option value="NEW">Solo nuevos (10-)</option>
       <option value="USED">Solo usados (US-)</option>
+      <option value="ALWAYS">Siempre incluidos (laptops, etc.)</option>
     </select>
     <select id="sortBy" onchange="renderTable()">
       <option value="desc">Descripción A→Z</option>
@@ -148,8 +176,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
       <thead><tr>
         <th>#</th><th>Fecha</th><th>Cód.Bodega</th><th>Desc. Bodega</th>
         <th>Tipo Doc.</th><th>N° Doc.</th><th>Código Artículo</th>
-        <th>Descripción</th><th>Serie</th><th>Tipo</th><th>Costo</th>
-        <th title="Marcar código como consumible para futuros archivos">Consumible</th>
+        <th>Descripción</th><th>Serie</th><th>Tipo</th><th>Motivo inclusión</th><th>Costo</th><th>Acción</th>
       </tr></thead>
       <tbody id="tblBody"></tbody>
       <tfoot id="tblFoot"></tfoot>
@@ -158,63 +185,125 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
 
   <div class="empty" id="emptyState" style="display:none">
     <div class="ico">✅</div>
-    <p style="font-weight:700;margin-bottom:.25rem">Sin artículos pendientes</p>
-    <p style="font-size:13px">Todos los artículos fueron devueltos según las reglas aplicadas.</p>
+    <p style="font-weight:700;margin-bottom:.25rem">Sin artículos pendientes de devolución</p>
+    <p style="font-size:13px">Todos los artículos fueron devueltos o no aplican según las directrices.</p>
   </div>
 </div>
 
-<!-- ═══════ TAB: CONFIGURACIÓN ═══════ -->
+<!-- ══════════════════ TAB: CONFIGURACIÓN ══════════════════ -->
 <div id="tab-settings" class="page">
-  <div class="settings-grid">
 
-    <div class="card">
-      <h3>🔗 Google Sheets — Consumibles</h3>
-      <label class="field-lbl">URL de la hoja de cálculo</label>
-      <input class="inp" id="sheetsUrl" placeholder="https://docs.google.com/spreadsheets/d/...">
-      <label class="field-lbl">Nombre de la pestaña de consumibles</label>
-      <input class="inp" id="sheetsTab" value="CONSUMIBLES" placeholder="CONSUMIBLES">
-      <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
-        <button class="btn btn-blue" onclick="syncFromSheets()">⬇ Cargar desde Sheets</button>
-        <button class="btn btn-dark" onclick="exportForSheets()">⬆ Exportar para Sheets</button>
+  <div class="cfg-grid">
+
+    <!-- Columna izquierda -->
+    <div>
+
+      <!-- PASO 1: Antigüedad -->
+      <div class="card">
+        <h3>📅 Paso 1 — Corte por antigüedad</h3>
+        <label class="field-lbl">Años hacia atrás desde la fecha de salida</label>
+        <input class="inp" type="number" id="cfgYears" min="1" max="20" value="5" style="width:100px">
+        <p style="font-size:11px;color:#94a3b8;margin-top:.4rem">Ej: 5 → solo egresos desde 5 años antes de la fecha de salida del colaborador.</p>
+
+        <div style="margin-top:1rem">
+          <label class="field-lbl">Categorías que se incluyen SIEMPRE (sin importar fecha)</label>
+          <p style="font-size:11px;color:#64748b;margin-bottom:.5rem">Palabras clave en la descripción del artículo (una por línea, sin distinción de mayúsculas):</p>
+          <textarea class="inp inp-mono" id="cfgAlwaysKw" rows="6"></textarea>
+          <p style="font-size:10px;color:#94a3b8;margin-top:.3rem">Ejemplos: laptop, portátil, tablet, celular, smartphone, fusionadora, otdr</p>
+        </div>
+        <button class="btn btn-dark" style="margin-top:.75rem" onclick="saveCfg()">💾 Guardar</button>
       </div>
-      <div class="sync-status" id="syncStatus"><span class="sdot didle"></span>Sin sincronizar</div>
 
-      <hr style="margin:1.1rem 0;border:none;border-top:1px solid #e2e8f0">
-      <h3>💰 Google Sheets — Costos</h3>
-      <label class="field-lbl">Nombre de la pestaña de costos</label>
-      <input class="inp" id="costsTab" value="COSTOS" placeholder="COSTOS">
-      <p style="font-size:11px;color:#94a3b8;margin-top:.4rem">Col A = código artículo · Col D = costo</p>
-      <button class="btn btn-outline" id="btnFetchCosts" style="margin-top:.75rem" onclick="fetchCosts()">🔍 Consultar costos faltantes</button>
+      <!-- Google Sheets -->
+      <div class="card">
+        <h3>🔗 Google Sheets</h3>
+        <label class="field-lbl">URL de la hoja (debe ser pública)</label>
+        <input class="inp inp-mono" id="sheetsUrl" placeholder="https://docs.google.com/spreadsheets/d/...">
+        <label class="field-lbl">Pestaña de consumibles</label>
+        <input class="inp" id="sheetsTab" value="CONSUMIBLES">
+        <label class="field-lbl">Pestaña de costos</label>
+        <input class="inp" id="costsTab" value="COSTOS">
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
+          <button class="btn btn-blue" onclick="syncFromSheets()">⬇ Cargar consumibles</button>
+          <button class="btn btn-outline" onclick="exportForSheets()">⬆ Exportar consumibles</button>
+          <button class="btn btn-outline" id="btnFetchCosts" onclick="fetchCosts()">🔍 Consultar costos</button>
+        </div>
+        <div class="sync-status" id="syncStatus"><span class="sdot didle"></span>Sin sincronizar</div>
+      </div>
+
     </div>
 
-    <div class="card">
-      <h3>🗑 Códigos consumibles <span id="consCount" style="font-weight:400;color:#94a3b8;font-size:12px"></span></h3>
-      <div class="add-row">
-        <input type="text" id="newCodeInput" placeholder="10-XX-XX-XXX  (Enter para agregar)" onkeydown="if(event.key==='Enter')addCode()">
-        <button class="btn btn-dark" onclick="addCode()">+ Agregar</button>
-      </div>
-      <div class="cons-list" id="consList"></div>
-      <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
-        <button class="btn btn-outline" onclick="sortCodes()">↕ Ordenar</button>
-        <button class="btn btn-red" onclick="if(confirm('¿Limpiar toda la lista?'))clearAllCodes()">🗑 Limpiar</button>
-        <button class="btn btn-green" onclick="applyAndSave()">✓ Guardar y aplicar</button>
-      </div>
-    </div>
+    <!-- Columna derecha -->
+    <div>
 
+      <!-- PASO 2: Reglas de inclusión -->
+      <div class="card">
+        <h3>📋 Paso 2 — Reglas de inclusión por categoría</h3>
+        <p style="font-size:11px;color:#64748b;margin-bottom:.75rem">Solo los artículos que cumplan al menos una regla activa aparecen en el reporte. Puedes añadir, editar o desactivar reglas.</p>
+        <div class="rule-list" id="ruleList"></div>
+        <button class="btn btn-dark" onclick="openRuleModal()">+ Nueva regla</button>
+      </div>
+
+      <!-- Consumibles -->
+      <div class="card">
+        <h3>🗑 Códigos consumibles <span id="consCount" style="font-weight:400;color:#94a3b8;font-size:12px"></span></h3>
+        <p style="font-size:11px;color:#64748b;margin-bottom:.6rem">Estos códigos se eliminan automáticamente del reporte en todos los archivos.</p>
+        <div class="add-row">
+          <input type="text" id="newCodeInput" placeholder="10-XX-XX-XXX  (Enter para agregar)" onkeydown="if(event.key==='Enter')addCode()">
+          <button class="btn btn-dark" onclick="addCode()">+ Agregar</button>
+        </div>
+        <div class="cons-list" id="consList"></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="btn btn-outline" onclick="sortCodes()">↕ Ordenar</button>
+          <button class="btn btn-red" onclick="if(confirm('¿Limpiar toda la lista?'))clearAllCodes()">🗑 Limpiar</button>
+          <button class="btn btn-green" onclick="applyAndSave()">✓ Guardar y aplicar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MODAL: NUEVA / EDITAR REGLA ══════════════════ -->
+<div class="modal-bg" id="ruleModal">
+  <div class="modal">
+    <h3 id="modalTitle">Nueva regla de inclusión</h3>
+    <label>Nombre de la categoría</label>
+    <input id="mName" placeholder="Ej: EPP de alto valor">
+    <label>Palabras clave en descripción (separadas por coma)</label>
+    <textarea id="mKeywords" placeholder="arnés, línea de vida, cinturón, comelón"></textarea>
+    <label>Umbral mínimo de costo (0 = sin umbral)</label>
+    <input id="mThreshold" type="number" min="0" value="0" placeholder="0">
+    <label>¿Incluir siempre sin importar fecha? (aplica Paso 1 excepción)</label>
+    <select id="mAlways">
+      <option value="0">No — aplica corte por antigüedad</option>
+      <option value="1">Sí — siempre incluir sin importar fecha</option>
+    </select>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeRuleModal()">Cancelar</button>
+      <button class="btn btn-dark" onclick="saveRule()">Guardar regla</button>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════
-// STORAGE KEYS
-// ═══════════════════════════════════════════════
-const SK_CONS  = 'liq_consumables_v3';
-const SK_URL   = 'liq_sheets_url';
-const SK_TAB   = 'liq_sheets_tab';
-const SK_CTAB  = 'liq_costs_tab';
+// ══════════════════════════════════════════════════════
+//  STORAGE KEYS
+// ══════════════════════════════════════════════════════
+const SK = {
+  CONS:  'liq_consumables_v3',
+  RULES: 'liq_rules_v2',
+  CFG:   'liq_config_v2',
+  URL:   'liq_sheets_url',
+  TAB:   'liq_sheets_tab',
+  CTAB:  'liq_costs_tab',
+};
 
+// ══════════════════════════════════════════════════════
+//  DEFAULT CONFIG
+// ══════════════════════════════════════════════════════
 const DEFAULT_CONSUMABLES = [
   '10-01-01-001','10-01-01-003','10-01-01-062','10-01-01-230','10-01-01-231',
   '10-01-01-242','10-01-07-001','10-01-07-010','10-01-07-019','10-01-07-053',
@@ -222,200 +311,276 @@ const DEFAULT_CONSUMABLES = [
   '10-04-07-116','10-04-12-065','10-04-22-664','10-06-04-013','10-06-04-015'
 ];
 
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
-let ST = {
-  consumables: new Set(loadCons()),
-  pending: [],       // processed items for table
-  rawRows: [],       // all parsed data rows
-  meta: {},          // employee header
-  costsDB: {},       // code -> cost from Sheets
-  xlsxBlob: null,
-};
+// Each rule: { id, name, keywords:[], threshold:number, always:bool, active:bool }
+const DEFAULT_RULES = [
+  { id:1, name:'Laptops / Portátiles',         keywords:['laptop','portatil','portátil','notebook'],            threshold:0,   always:true,  active:true },
+  { id:2, name:'Tablets',                       keywords:['tablet','ipad'],                                      threshold:0,   always:true,  active:true },
+  { id:3, name:'Celular / Smartphone',          keywords:['celular','smartphone','iphone','android','telefono'], threshold:0,   always:true,  active:true },
+  { id:4, name:'Fusionadora / Kit fusión',      keywords:['fusionadora','fusion','kit fusion','kit de fusion'],  threshold:0,   always:true,  active:true },
+  { id:5, name:'OTDR',                          keywords:['otdr'],                                               threshold:0,   always:true,  active:true },
+  { id:6, name:'EPP de alto valor',             keywords:['arnes','arnés','linea de vida','línea de vida','comelo','cinturon de posicionamiento','posicionamiento'], threshold:60, always:false, active:true },
+  { id:7, name:'Herramientas de alto valor',    keywords:['sonda','escalera','etiquetadora','camara','cámara','drone','dron','equipo de evento'], threshold:100, always:false, active:true },
+  { id:8, name:'Equipos especializados',        keywords:['medidor','reflectometro','analizador','generador','osciloscopio'], threshold:100, always:false, active:true },
+];
 
-function loadCons() {
-  try { const s=localStorage.getItem(SK_CONS); return s?JSON.parse(s):DEFAULT_CONSUMABLES; } catch{ return DEFAULT_CONSUMABLES; }
-}
-function saveCons() {
-  localStorage.setItem(SK_CONS, JSON.stringify([...ST.consumables]));
-}
+const DEFAULT_CONFIG = { years: 5, alwaysKw: ['laptop','portátil','portatil','tablet','celular','smartphone','fusionadora','otdr'] };
 
-// Init settings fields
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('sheetsUrl').value = localStorage.getItem(SK_URL) || 'https://docs.google.com/spreadsheets/d/1oXTeDAlxykRvM32U5akdVqwXknAe1y0s-ZhpstYe-hs';
-  document.getElementById('sheetsTab').value = localStorage.getItem(SK_TAB) || 'CONSUMIBLES';
-  document.getElementById('costsTab').value  = localStorage.getItem(SK_CTAB) || 'COSTOS';
-  renderConsList();
-});
+// ══════════════════════════════════════════════════════
+//  LOAD / SAVE STATE
+// ══════════════════════════════════════════════════════
+function ls(key, def){ try{ const v=localStorage.getItem(key); return v?JSON.parse(v):def; }catch{ return def; } }
+function ss(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch{} }
 
-// ═══════════════════════════════════════════════
-// TABS
-// ═══════════════════════════════════════════════
-function showTab(name, btn) {
+let CFG   = ls(SK.CFG, DEFAULT_CONFIG);
+let RULES = ls(SK.RULES, DEFAULT_RULES);
+let CONS  = new Set(ls(SK.CONS, DEFAULT_CONSUMABLES));
+
+let ST = { pending:[], rawRows:[], meta:{}, costsDB:{}, xlsxBlob:null };
+
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
+function showTab(name, btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
 }
 
-// ═══════════════════════════════════════════════
-// CSV PARSING
-// ═══════════════════════════════════════════════
-function splitLine(line, sep) {
+// ══════════════════════════════════════════════════════
+//  INIT UI
+// ══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('sheetsUrl').value = ls(SK.URL,'https://docs.google.com/spreadsheets/d/1oXTeDAlxykRvM32U5akdVqwXknAe1y0s-ZhpstYe-hs');
+  document.getElementById('sheetsTab').value = ls(SK.TAB,'CONSUMIBLES');
+  document.getElementById('costsTab').value  = ls(SK.CTAB,'COSTOS');
+  document.getElementById('cfgYears').value  = CFG.years;
+  document.getElementById('cfgAlwaysKw').value = (CFG.alwaysKw||[]).join('\n');
+  renderRuleList();
+  renderConsList();
+});
+
+// ══════════════════════════════════════════════════════
+//  CSV PARSING
+// ══════════════════════════════════════════════════════
+function splitLine(line, sep){
   const res=[]; let cur='', inQ=false;
-  for(let i=0;i<line.length;i++){
-    const c=line[i];
+  for(const c of line){
     if(c==='"') inQ=!inQ;
-    else if(c===sep && !inQ){ res.push(cur); cur=''; }
+    else if(c===sep&&!inQ){ res.push(cur); cur=''; }
     else cur+=c;
   }
-  res.push(cur);
-  return res;
+  res.push(cur); return res;
 }
 
-function parseCost(v) {
+function parseCost(v){
   if(!v) return null;
   const n=parseFloat(String(v).replace(/[$, ]/g,''));
   return isNaN(n)?null:n;
 }
 
-function baseCode(c) {
+function parseDate(str){
+  // Accepts DD/MM/YYYY or YYYY-MM-DD
+  if(!str) return null;
+  const p=str.split(/[\/\-]/);
+  if(p.length<3) return null;
+  if(p[0].length===4) return new Date(+p[0],+p[1]-1,+p[2]);
+  return new Date(+p[2],+p[1]-1,+p[0]);
+}
+
+function baseCode(c){
   if(!c) return c;
   if(c.startsWith('10-')) return c.slice(3);
   if(c.startsWith('US-')) return c.slice(3);
   return c;
 }
 
-function parseCSVText(text) {
+function normalizeStr(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+function parseCSVText(text){
   const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
-
-  // Employee metadata from first 8 lines
-  const meta = {};
+  const meta={};
   for(let i=0;i<8;i++){
-    const parts = lines[i].split(';');
-    const k = parts[0].replace(':','').trim();
-    if(k.includes('COMPANIA'))    meta.compania    = (parts[1]||'').trim();
-    if(k.includes('FECHA DESDE')){ meta.fechaDesde=(parts[1]||'').trim(); meta.fechaHasta=(parts[4]||'').trim(); }
-    if(k.startsWith('Empleado')){  meta.id=k.replace('Empleado','').trim(); meta.nombre=(parts[1]||'').trim(); meta.cedula=(parts[4]||'').trim(); meta.estado=(parts[6]||'').trim(); }
-    if(k==='Area ')    meta.area    = (parts[1]||'').trim();
-    if(k==='Depto. ')  meta.depto   = (parts[1]||'').trim();
-    if(k==='Cargo ')   meta.cargo   = (parts[1]||'').trim();
-    if(k==='Oficina ') meta.oficina = (parts[1]||'').trim();
+    const p=lines[i].split(';');
+    const k=p[0].replace(':','').trim();
+    if(k.includes('COMPANIA'))    meta.compania=(p[1]||'').trim();
+    if(k.includes('FECHA DESDE')){ meta.fechaDesde=(p[1]||'').trim(); meta.fechaHasta=(p[4]||'').trim(); }
+    if(k.startsWith('Empleado')){ meta.id=k.replace('Empleado','').trim(); meta.nombre=(p[1]||'').trim(); meta.cedula=(p[4]||'').trim(); meta.estado=(p[6]||'').trim(); }
+    if(k==='Area ')    meta.area=(p[1]||'').trim();
+    if(k==='Depto. ')  meta.depto=(p[1]||'').trim();
+    if(k==='Cargo ')   meta.cargo=(p[1]||'').trim();
+    if(k==='Oficina ') meta.oficina=(p[1]||'').trim();
   }
-
-  // Data rows: header at line index 8, data from line 9+
-  const headerParts = splitLine(lines[8]||'', ';').map(c=>c.trim());
-  const rows = [];
+  const rows=[];
   for(let i=9;i<lines.length;i++){
     const raw=lines[i].trim(); if(!raw) continue;
-    const cols=splitLine(raw,';');
-    if(cols.length < 13) continue;
-    const obj={};
-    headerParts.forEach((h,idx)=>{ obj[h]=cols[idx]?.trim()||''; });
-    // Also map by position for safety
+    const c=splitLine(raw,';'); if(c.length<13) continue;
     rows.push({
-      tipoDoc:    cols[0]?.trim()||'',
-      descTipo:   cols[1]?.trim()||'',
-      tipoMov:    cols[2]?.trim()||'',
-      noDoc:      cols[3]?.trim()||'',
-      noSol:      cols[4]?.trim()||'',
-      noFis:      cols[5]?.trim()||'',
-      serieFis:   cols[6]?.trim()||'',
-      fecha:      cols[7]?.trim()||'',
-      codBodega:  cols[8]?.trim()||'',
-      descBodega: cols[9]?.trim()||'',
-      codigo:     cols[10]?.trim()||'',
-      descripcion:cols[11]?.trim()||'',
-      serie:      cols[12]?.trim()||'',
-      costo:      parseCost(cols[13]?.trim()),
-      observacion:cols[14]?.trim()||'',
+      tipoDoc:c[0]?.trim()||'', descTipo:c[1]?.trim()||'', tipoMov:c[2]?.trim()||'',
+      noDoc:c[3]?.trim()||'', fecha:c[7]?.trim()||'',
+      codBodega:c[8]?.trim()||'', descBodega:c[9]?.trim()||'',
+      codigo:c[10]?.trim()||'', descripcion:c[11]?.trim()||'',
+      serie:c[12]?.trim()||'', costo:parseCost(c[13]?.trim()),
+      _fechaObj: parseDate(c[7]?.trim()),
     });
   }
   return { meta, rows };
 }
 
-// ═══════════════════════════════════════════════
-// APPLY RULES
-// ═══════════════════════════════════════════════
-function applyRules(rows) {
-  // Rule 3: remove consumables
-  const nonCons = rows.filter(r => !ST.consumables.has(r.codigo));
-  const consRemoved = rows.length - nonCons.length;
+// ══════════════════════════════════════════════════════
+//  PASO 1 — ANTIGÜEDAD
+// ══════════════════════════════════════════════════════
+function paso1_antiguedad(rows, meta){
+  // Determine cut date: fechaHasta (exit date) minus CFG.years years
+  let exitDate = parseDate(meta.fechaHasta) || new Date();
+  const cutDate = new Date(exitDate);
+  cutDate.setFullYear(cutDate.getFullYear() - CFG.years);
 
-  const sal = nonCons.filter(r => r.tipoMov === 'SALIDA');
-  const ent = nonCons.filter(r => r.tipoMov === 'ENTRADA');
+  // Always-include keywords (from CFG)
+  const alwaysKw = (CFG.alwaysKw||[]).map(normalizeStr).filter(Boolean);
 
-  // Rule 1: series duplicadas dentro de SALIDAs
-  const serCount = {};
-  for(const r of sal){ if(r.serie && r.serie!=='0') serCount[r.serie]=(serCount[r.serie]||0)+1; }
-  const dupSeries = new Set(Object.keys(serCount).filter(s=>serCount[s]>1));
+  const included=[], excluded_age=[];
 
-  // Group by base code
+  for(const r of rows){
+    if(r.tipoMov !== 'SALIDA') continue;
+
+    const descN = normalizeStr(r.descripcion);
+    const isAlways = RULES.filter(rl=>rl.active&&rl.always)
+                         .some(rl=>rl.keywords.some(kw=>descN.includes(normalizeStr(kw))))
+                  || alwaysKw.some(kw=>descN.includes(kw));
+
+    if(isAlways){
+      r._alwaysIncluded = true;
+      included.push(r);
+    } else if(r._fechaObj && r._fechaObj >= cutDate){
+      included.push(r);
+    } else {
+      excluded_age.push(r);
+    }
+  }
+  return { included, excluded_age };
+}
+
+// ══════════════════════════════════════════════════════
+//  PASO 2 — FILTRO POR CATEGORÍA / REGLAS
+// ══════════════════════════════════════════════════════
+function paso2_categorias(rows){
+  const activeRules = RULES.filter(r=>r.active);
+  const included=[], excluded_cat=[];
+
+  for(const r of rows){
+    const descN = normalizeStr(r.descripcion);
+    const costo = r.costo || ST.costsDB[r.codigo] || ST.costsDB['10-'+baseCode(r.codigo)] || 0;
+
+    let matched=false, matchedRule=null;
+    for(const rule of activeRules){
+      const kwMatch = rule.keywords.some(kw => descN.includes(normalizeStr(kw)));
+      if(!kwMatch) continue;
+      const thrOk = rule.threshold===0 || costo===0 || costo >= rule.threshold;
+      if(thrOk){ matched=true; matchedRule=rule; break; }
+    }
+    if(matched){ r._matchedRule=matchedRule; included.push(r); }
+    else excluded_cat.push(r);
+  }
+  return { included, excluded_cat };
+}
+
+// ══════════════════════════════════════════════════════
+//  REGLAS SERIES (devueltos)
+// ══════════════════════════════════════════════════════
+function applyReturnRules(salidas, allRows){
+  // Use ALL rows (not just filtered) to detect returns
+  const entradas = allRows.filter(r=>r.tipoMov==='ENTRADA');
+  const sal = salidas;
+  const ent = entradas;
+
+  sal.forEach(r=>r._base=baseCode(r.codigo));
+  ent.forEach(r=>r._base=baseCode(r.codigo));
+
+  const serCount={};
+  for(const r of sal){ if(r.serie&&r.serie!=='0') serCount[r.serie]=(serCount[r.serie]||0)+1; }
+  const dupSeries=new Set(Object.keys(serCount).filter(s=>serCount[s]>1));
+
   const salByBase={}, entByBase={};
-  for(const r of sal){ const b=baseCode(r.codigo); (salByBase[b]=salByBase[b]||[]).push(r); }
-  for(const r of ent){ const b=baseCode(r.codigo); (entByBase[b]=entByBase[b]||[]).push(r); }
+  for(const r of sal){ (salByBase[r._base]=salByBase[r._base]||[]).push(r); }
+  for(const r of ent){ (entByBase[r._base]=entByBase[r._base]||[]).push(r); }
 
-  const pending=[];
-  let retRemoved=0;
+  const pending=[], returned=[];
 
   for(const b of Object.keys(salByBase)){
-    const sg=salByBase[b];
-    const eg=entByBase[b]||[];
-
-    const hasSeries = sg.some(r=>r.serie && r.serie!=='0' && r.serie!=='nan');
-
-    if(hasSeries){
-      const entSeries=new Set(eg.map(r=>r.serie).filter(s=>s&&s!=='0'));
-      // Serialized items
+    const sg=salByBase[b], eg=entByBase[b]||[];
+    const hasSer=sg.some(r=>r.serie&&r.serie!=='0'&&r.serie!=='nan');
+    if(hasSer){
+      const entSer=new Set(eg.map(r=>r.serie).filter(s=>s&&s!=='0'));
       for(const r of sg){
         const s=r.serie;
-        if(s && s!=='0' && s!=='nan' && s!==''){
-          if(dupSeries.has(s)){ retRemoved++; continue; }  // Rule 1
-          if(entSeries.has(s)){ retRemoved++; continue; }  // Rule 2
+        if(s&&s!=='0'&&s!=='nan'&&s!==''){
+          if(dupSeries.has(s)||entSer.has(s)){ returned.push(r); continue; }
           pending.push(r);
         }
       }
-      // Non-serialized in same group
       const nsSal=sg.filter(r=>!r.serie||r.serie==='0'||r.serie==='nan'||r.serie==='');
       const nsEnt=eg.filter(r=>!r.serie||r.serie==='0'||r.serie==='nan'||r.serie==='');
       const net=nsSal.length-nsEnt.length;
       if(net>0) nsSal.slice(0,net).forEach(r=>pending.push(r));
-      retRemoved+=nsEnt.length;
+      else nsSal.forEach(r=>returned.push(r));
+      nsEnt.forEach(r=>returned.push(r));
     } else {
-      // Count-based
-      const ruled1=sg.filter(r=>dupSeries.has(r.serie));
-      const rest=sg.filter(r=>!dupSeries.has(r.serie));
-      retRemoved+=ruled1.length;
-      const net=rest.length-eg.length;
-      if(net>0) rest.slice(0,net).forEach(r=>pending.push(r));
-      retRemoved+=eg.length;
+      const net=sg.length-eg.length;
+      if(net>0) sg.slice(0,net).forEach(r=>pending.push(r));
+      else sg.forEach(r=>returned.push(r));
     }
   }
-
-  return { pending, stats:{ total:rows.length, pending:pending.length, consRemoved, retRemoved } };
+  return { pending, returned };
 }
 
-// ═══════════════════════════════════════════════
-// FILE LOAD
-// ═══════════════════════════════════════════════
-function loadFile(file) {
+// ══════════════════════════════════════════════════════
+//  MAIN PIPELINE
+// ══════════════════════════════════════════════════════
+function runPipeline(rawRows, meta){
+  // Step 0: remove consumables
+  const nonCons = rawRows.filter(r=>!CONS.has(r.codigo));
+
+  // Step 1: antigüedad (only SALIDAs)
+  const { included: afterAge, excluded_age } = paso1_antiguedad(nonCons, meta);
+
+  // Step 2: categorías
+  const { included: afterCat, excluded_cat } = paso2_categorias(afterAge);
+
+  // Step 3: return rules
+  const { pending, returned } = applyReturnRules(afterCat, rawRows);
+
+  return {
+    pending,
+    stats:{
+      total: rawRows.filter(r=>r.tipoMov==='SALIDA').length,
+      pending: pending.length,
+      excluded_age: excluded_age.length,
+      excluded_cat: excluded_cat.length,
+      returned: returned.length,
+      consRemoved: rawRows.length - nonCons.length,
+    }
+  };
+}
+
+// ══════════════════════════════════════════════════════
+//  FILE LOAD
+// ══════════════════════════════════════════════════════
+function loadFile(file){
   setProgress(true,'Leyendo archivo…',10);
   const reader=new FileReader();
-  reader.onload = e => {
+  reader.onload=e=>{
     try{
       setProgress(true,'Analizando movimientos…',40);
       const { meta, rows } = parseCSVText(e.target.result);
-      ST.meta = meta;
-      ST.rawRows = rows;
+      ST.meta=meta; ST.rawRows=rows;
 
-      setProgress(true,'Aplicando reglas de depuración…',65);
-      const { pending, stats } = applyRules(rows);
-      ST.pending = pending;
+      setProgress(true,'Aplicando directrices…',65);
+      const { pending, stats } = runPipeline(rows, meta);
+      ST.pending=pending;
 
       setProgress(true,'Generando Excel…',85);
-      ST.xlsxBlob = buildExcel(meta, pending);
-
+      ST.xlsxBlob=buildExcel(meta, pending);
       setProgress(true,'Listo',100);
       setTimeout(()=>setProgress(false),400);
 
@@ -430,188 +595,80 @@ function loadFile(file) {
       document.getElementById('tblWrap').style.display=pending.length>0?'':'none';
       document.getElementById('emptyState').style.display=pending.length===0?'':'none';
 
-      showToast(`✅ ${pending.length} artículos pendientes — Excel generado y listo`);
-    } catch(err){
-      setProgress(false);
-      showToast('❌ Error al procesar: '+err.message);
-      console.error(err);
-    }
+      showToast(`✅ ${pending.length} artículos pendientes — Excel listo`);
+    } catch(err){ setProgress(false); showToast('❌ Error: '+err.message); console.error(err); }
   };
   reader.readAsText(file,'windows-1252');
 }
 
-// ═══════════════════════════════════════════════
-// BUILD EXCEL  (SheetJS)
-// ═══════════════════════════════════════════════
-function buildExcel(meta, pending) {
-  const wb = XLSX.utils.book_new();
-  const ws_data = [];
+// ══════════════════════════════════════════════════════
+//  BUILD EXCEL
+// ══════════════════════════════════════════════════════
+function buildExcel(meta, pending){
+  const wb=XLSX.utils.book_new();
+  const aoa=[];
 
-  // ── Row 1: Company title ──
-  ws_data.push([meta.compania||'EMPRESA']);
+  aoa.push([(meta.compania||'EMPRESA').toUpperCase()+'  —  REPORTE DE ARTÍCULOS PENDIENTES DE DEVOLUCIÓN']);
+  aoa.push(['EMPLEADO:', `#${meta.id||''}  ${meta.nombre||''}`, '', 'CÉDULA:', meta.cedula||'', '', 'ESTADO:', meta.estado||'']);
+  aoa.push(['ÁREA:', meta.area||'', '', 'CARGO:', meta.cargo||'']);
+  aoa.push(['DPTO.:', meta.depto||'', '', 'OFICINA:', meta.oficina||'']);
+  aoa.push(['PERÍODO:', `${meta.fechaDesde||''} — ${meta.fechaHasta||''}`]);
+  aoa.push([]);
+  aoa.push(['FECHA','CÓD. BODEGA','DESCRIPCIÓN BODEGA','TIPO DOC.','N° DOCUMENTO',
+            'CÓDIGO ARTÍCULO','DESCRIPCIÓN ARTÍCULO','SERIE','MOTIVO INCLUSIÓN','COSTO ARTÍCULO','CANTIDAD','VALOR A DESCONTAR']);
 
-  // ── Rows 2-5: Employee info ──
-  ws_data.push(['EMPLEADO:', `#${meta.id||''}  ${meta.nombre||''}`, '', 'CÉDULA:', meta.cedula||'', '', 'ESTADO:', meta.estado||'']);
-  ws_data.push(['ÁREA:', meta.area||'', '', 'CARGO:', meta.cargo||'']);
-  ws_data.push(['DPTO.:', meta.depto||'', '', 'OFICINA:', meta.oficina||'']);
-  ws_data.push(['PERÍODO:', `${meta.fechaDesde||''} — ${meta.fechaHasta||''}`]);
+  const DS=9;
+  pending.forEach(r=>{
+    const costo=r.costo&&r.costo>0.01?r.costo:(ST.costsDB[r.codigo]||ST.costsDB['10-'+baseCode(r.codigo)]||null);
+    const serie=r.serie&&r.serie!=='0'&&r.serie!=='nan'?r.serie:null;
+    const motivo=r._alwaysIncluded?'Siempre incluido':(r._matchedRule?r._matchedRule.name:'—');
+    aoa.push([r.fecha, r.codBodega, r.descBodega, r.tipoDoc, r.noDoc,
+              r.codigo, r.descripcion, serie||null, motivo, costo||null, 1, null]);
+  });
 
-  // ── Row 6: blank ──
-  ws_data.push([]);
+  const LAST=DS+pending.length-1;
+  aoa.push(['TOTAL →','','','','','','','','','',
+    {f:`SUM(K${DS}:K${LAST})`},{f:`SUM(L${DS}:L${LAST})`}]);
 
-  // ── Row 7: column headers ──
-  ws_data.push(['FECHA','CÓD. BODEGA','DESCRIPCIÓN BODEGA','TIPO DOC.','N° DOCUMENTO','CÓDIGO ARTÍCULO','DESCRIPCIÓN ARTÍCULO','SERIE','COSTO ARTÍCULO','CANTIDAD','VALOR A DESCONTAR']);
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols']=[{wch:12},{wch:13},{wch:28},{wch:10},{wch:15},{wch:18},{wch:42},{wch:24},{wch:22},{wch:14},{wch:10},{wch:16}];
 
-  // ── Data rows (start at row 8, index 7) ──
-  const dataStart = 9; // 1-based Excel row where data begins
-  for(const r of pending){
-    const costo = r.costo && r.costo>0.01 ? r.costo : (ST.costsDB[r.codigo]||ST.costsDB['10-'+baseCode(r.codigo)]||null);
-    const serie = r.serie && r.serie!=='0' && r.serie!=='nan' ? r.serie : '';
-    ws_data.push([
-      r.fecha, r.codBodega, r.descBodega, r.tipoDoc, r.noDoc,
-      r.codigo, r.descripcion, serie||null, costo||null, 1, null
-    ]);
-  }
-
-  // ── Totals row ──
-  ws_data.push(['TOTAL →','','','','','','','','',
-    { f: `SUM(J${dataStart}:J${dataStart+pending.length-1})` },
-    { f: `SUM(K${dataStart}:K${dataStart+pending.length-1})` }
-  ]);
-
-  const ws = XLSX.utils.aoa_to_sheet(ws_data);
-
-  // Set column widths (in chars)
-  ws['!cols'] = [
-    {wch:12},{wch:13},{wch:32},{wch:10},{wch:15},
-    {wch:18},{wch:44},{wch:24},{wch:14},{wch:10},{wch:16}
-  ];
-
-  // Add VALUE formula for each data row
   for(let i=0;i<pending.length;i++){
-    const rowNum = dataStart + i; // 1-based
-    const cellK  = XLSX.utils.encode_cell({r: rowNum-1, c:10});
-    ws[cellK] = { f: `IFERROR(I${rowNum}*J${rowNum},"")`, t:'n', z:'"$"#,##0.00' };
+    const rn=DS+i;
+    ws[XLSX.utils.encode_cell({r:rn-1,c:11})]={f:`IFERROR(J${rn}*K${rn},"")`,t:'n',z:'"$"#,##0.00'};
+    const ci=XLSX.utils.encode_cell({r:rn-1,c:9});
+    if(ws[ci]&&ws[ci].v) ws[ci].z='"$"#,##0.00';
   }
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:11}}];
+  ws['!freeze']={xSplit:0,ySplit:8};
 
-  // Number formats for cost and valor columns
-  for(let i=0;i<pending.length;i++){
-    const rowNum = dataStart + i;
-    const cellI = XLSX.utils.encode_cell({r: rowNum-1, c:8});
-    if(ws[cellI] && ws[cellI].v) ws[cellI].z = '"$"#,##0.00';
-    const cellK = XLSX.utils.encode_cell({r: rowNum-1, c:10});
-    if(ws[cellK]) ws[cellK].z = '"$"#,##0.00';
-  }
-
-  // Merges
-  ws['!merges'] = [
-    {s:{r:0,c:0},e:{r:0,c:10}},   // Row 1: title
-    {s:{r:6,c:0},e:{r:6,c:10}},   // Row 7 total label (approximate)
-  ];
-
-  // Freeze panes below header
-  ws['!freeze'] = { xSplit:0, ySplit:8 };
-
-  // Row heights (approximate via custom)
-  ws['!rows'] = [
-    {hpt:30},{hpt:16},{hpt:16},{hpt:16},{hpt:16},{hpt:6},{hpt:24}
-  ];
-
-  XLSX.utils.book_append_sheet(wb, ws, 'Artículos Pendientes');
-
-  // Write as array buffer
-  const buf = XLSX.write(wb, { bookType:'xlsx', type:'array' });
-  return new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  XLSX.utils.book_append_sheet(wb,ws,'Artículos Pendientes');
+  const buf=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  return new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
 }
 
-function downloadExcel() {
+function downloadExcel(){
   if(!ST.xlsxBlob){ showToast('⚠️ Carga un archivo primero'); return; }
   const nombre=(ST.meta.nombre||'empleado').replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(ST.xlsxBlob);
-  a.download=`Pendientes_${nombre}.xlsx`;
-  a.click();
+  a.download=`Pendientes_${nombre}.xlsx`; a.click();
 }
 
-// ═══════════════════════════════════════════════
-// FETCH COSTS FROM SHEETS  (via CORS proxy)
-// ═══════════════════════════════════════════════
-async function fetchCosts() {
-  const url = document.getElementById('sheetsUrl').value.trim();
-  const tab = document.getElementById('costsTab').value.trim()||'COSTOS';
-  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(!m){ showToast('❌ URL inválida'); return; }
-
-  const sheetId = m[1];
-  const directUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
-  const proxyUrl  = `https://api.allorigins.win/get?url=${encodeURIComponent(directUrl)}`;
-
-  const btn = document.getElementById('btnFetchCosts');
-  if(btn){ btn.disabled=true; btn.textContent='⏳ Consultando…'; }
-
-  try{
-    let text='';
-    // Always go through proxy to avoid CORS/redirect issues
-    const res = await fetch(proxyUrl);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const json = await res.json();
-    text = json.contents||'';
-    // If Google redirected to login, contents will contain "ServiceLogin"
-    if(text.includes('ServiceLogin') || text.includes('accounts.google.com')){
-      throw new Error('La hoja no es pública. Compartela como "Cualquier persona con el enlace puede ver".');
-    }
-
-    let filled=0;
-    for(const line of text.split('\n')){
-      const parts=line.replace(/"/g,'').split(',');
-      const code=parts[0]?.trim();
-      const cost=parseFloat((parts[3]||parts[1]||'').trim());
-      if(code && !isNaN(cost)){ ST.costsDB[code]=cost; }
-    }
-    // Apply to pending items missing cost
-    for(const r of ST.pending){
-      if(!r.costo||r.costo<=0.01){
-        const c=ST.costsDB[r.codigo]||ST.costsDB['10-'+baseCode(r.codigo)];
-        if(c!==undefined){ r.costo=c; r.costoFromDB=true; filled++; }
-      }
-    }
-    ST.xlsxBlob = buildExcel(ST.meta, ST.pending);
-    renderTable();
-    showToast(`✅ ${filled} costos actualizados desde Sheets — Excel regenerado`);
-  } catch(e){
-    showToast('❌ No se pudo leer Sheets. Verifica que la hoja sea pública (Compartir → Cualquier persona con el enlace).');
-    console.error(e);
-  } finally {
-    if(btn){ btn.disabled=false; btn.textContent='🔍 Consultar costos faltantes'; }
-  }
-}
-
-// ═══════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════
-function renderEmpCard(m){
-  const fields=[['Empleado',`#${m.id||''} ${m.nombre||''}`],['Cédula',m.cedula||'—'],['Estado',m.estado||'—'],['Área',m.area||'—'],['Cargo',m.cargo||'—'],['Oficina',m.oficina||'—'],['Período',`${m.fechaDesde||''} → ${m.fechaHasta||''}`]];
-  document.getElementById('empGrid').innerHTML=fields.map(([l,v])=>`<div class="ef"><label>${l}</label><span>${v}</span></div>`).join('');
-  document.getElementById('empCard').classList.add('on');
-}
-
-function renderStatsBar(stats, pending){
-  const total=pending.reduce((s,r)=>s+(r.costo&&r.costo>0.01?r.costo:0),0);
-  document.getElementById('sPend').textContent=stats.pending;
-  document.getElementById('sPendSub').textContent=`de ${stats.total} movimientos totales`;
-  document.getElementById('sCost').textContent='$'+total.toFixed(2);
-  document.getElementById('sCons').textContent=stats.consRemoved;
-  document.getElementById('sRet').textContent=stats.retRemoved;
-}
-
+// ══════════════════════════════════════════════════════
+//  RENDER TABLE
+// ══════════════════════════════════════════════════════
 function renderTable(){
   const q=document.getElementById('searchQ').value.toLowerCase();
   const ft=document.getElementById('filterType').value;
   const sb=document.getElementById('sortBy').value;
 
   let items=[...ST.pending].filter(r=>{
-    const mq=!q||r.descripcion?.toLowerCase().includes(q)||r.codigo?.toLowerCase().includes(q)||r.serie?.toLowerCase().includes(q);
-    const mt=!ft||(ft==='NEW'&&r.codigo?.startsWith('10-'))||(ft==='USED'&&r.codigo?.startsWith('US-'));
+    const mq=!q||normalizeStr(r.descripcion).includes(q)||r.codigo.toLowerCase().includes(q)||(r.serie||'').toLowerCase().includes(q);
+    const mt=!ft
+      ||(ft==='NEW'&&r.codigo.startsWith('10-'))
+      ||(ft==='USED'&&r.codigo.startsWith('US-'))
+      ||(ft==='ALWAYS'&&r._alwaysIncluded);
     return mq&&mt;
   });
 
@@ -626,194 +683,249 @@ function renderTable(){
 
   let total=0, missing=0;
   document.getElementById('tblBody').innerHTML=items.map((r,i)=>{
-    const tipo=r.codigo?.startsWith('10-')?'<span class="bdg bdg-new">NUEVO</span>':'<span class="bdg bdg-used">USADO</span>';
+    const tipo=r.codigo.startsWith('10-')?'<span class="bdg bdg-new">NUEVO</span>':'<span class="bdg bdg-used">USADO</span>';
     const serie=r.serie&&r.serie!=='0'&&r.serie!=='nan'?`<span class="serie">${r.serie}</span>`:'<span style="color:#cbd5e1">—</span>';
-    const codeEsc=r.codigo.replace(/'/g,"\\'");
+    const motivo=r._alwaysIncluded
+      ?`<span class="bdg bdg-exc">Siempre</span>`
+      :r._matchedRule?`<span class="bdg bdg-cat" title="${r._matchedRule.name}">${r._matchedRule.name.length>18?r._matchedRule.name.slice(0,17)+'…':r._matchedRule.name}</span>`
+      :'<span style="color:#94a3b8">—</span>';
+    const costo=r.costo&&r.costo>0.01?r.costo:null;
     let costHtml;
-    if(r.costo&&r.costo>0.01){ total+=r.costo; costHtml=`<td class="cost">$${r.costo.toFixed(2)}</td>`; }
+    if(costo){ total+=costo; costHtml=`<td class="cost">$${costo.toFixed(2)}</td>`; }
     else{ missing++; costHtml=`<td class="cost-na">—</td>`; }
-    const consBtnHtml=`<td style="text-align:center">
-      <button onclick="markAsConsumable('${codeEsc}')" title="Marcar ${r.codigo} como consumible y quitar de la lista"
-        style="border:none;background:#fef3c7;color:#92400e;border-radius:5px;padding:3px 8px;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap"
-        onmouseover="this.style.background='#f59e0b';this.style.color='#fff'"
-        onmouseout="this.style.background='#fef3c7';this.style.color='#92400e'">
-        🗑 consumible
-      </button>
-    </td>`;
-    return `<tr id="row-${r.codigo.replace(/[^a-z0-9]/gi,'_')}-${i}">
+    const ce=r.codigo.replace(/'/g,"\\'");
+    const conBtn=`<td style="text-align:center"><button onclick="markAsConsumable('${ce}')"
+      style="border:none;background:#fef3c7;color:#92400e;border-radius:5px;padding:3px 8px;font-size:10px;font-weight:700;cursor:pointer"
+      onmouseover="this.style.background='#f59e0b';this.style.color='#fff'"
+      onmouseout="this.style.background='#fef3c7';this.style.color='#92400e'"
+      title="Agregar a consumibles y quitar del reporte">🗑 consumible</button></td>`;
+    return `<tr>
       <td style="color:#94a3b8;font-size:11px">${i+1}</td>
       <td style="font-size:11px;white-space:nowrap">${r.fecha}</td>
       <td class="mono">${r.codBodega}</td>
       <td style="font-size:11px">${r.descBodega}</td>
-      <td style="font-size:11px;text-align:center">${r.tipoDoc}</td>
+      <td style="text-align:center">${r.tipoDoc}</td>
       <td class="mono" style="text-align:center">${r.noDoc}</td>
       <td class="mono">${r.codigo}</td>
       <td style="max-width:220px;word-break:break-word">${r.descripcion}</td>
       <td>${serie}</td>
       <td>${tipo}</td>
-      ${costHtml}
-      ${consBtnHtml}
+      <td>${motivo}</td>
+      ${costHtml}${conBtn}
     </tr>`;
   }).join('');
 
   document.getElementById('tblFoot').innerHTML=`<tr class="tfoot-row">
-    <td colspan="11" style="font-size:12px;padding:9px 10px">Total: ${items.length} artículos${missing?` (${missing} sin costo)`:''}
-    </td><td class="cost">$${total.toFixed(2)}</td>
+    <td colspan="12" style="font-size:12px;padding:9px 10px">
+      Total: ${items.length} artículos${missing?` · ${missing} sin costo`:''}</td>
+    <td class="cost">$${total.toFixed(2)}</td>
   </tr>`;
 }
 
-// ═══════════════════════════════════════════════
-// CONSUMABLES SETTINGS
-// ═══════════════════════════════════════════════
+function renderEmpCard(m){
+  const f=[['Empleado',`#${m.id||''} ${m.nombre||''}`],['Cédula',m.cedula||'—'],['Estado',m.estado||'—'],['Área',m.area||'—'],['Cargo',m.cargo||'—'],['Oficina',m.oficina||'—'],['Período',`${m.fechaDesde||''} → ${m.fechaHasta||''}`]];
+  document.getElementById('empGrid').innerHTML=f.map(([l,v])=>`<div class="ef"><label>${l}</label><span>${v}</span></div>`).join('');
+  document.getElementById('empCard').classList.add('on');
+}
+
+function renderStatsBar(stats, pending){
+  const total=pending.reduce((s,r)=>s+(r.costo&&r.costo>0.01?r.costo:0),0);
+  const withCost=pending.filter(r=>r.costo&&r.costo>0.01).length;
+  document.getElementById('sPend').textContent=stats.pending;
+  document.getElementById('sPendSub').textContent=`de ${stats.total} egresos totales`;
+  document.getElementById('sCost').textContent='$'+total.toFixed(2);
+  document.getElementById('sCostSub').textContent=`${withCost} artículos con costo`;
+  document.getElementById('sAge').textContent=stats.excluded_age;
+  document.getElementById('sCat').textContent=stats.excluded_cat;
+  document.getElementById('sRet').textContent=stats.returned;
+}
+
+// ══════════════════════════════════════════════════════
+//  CONSUMABLE BUTTON (inline)
+// ══════════════════════════════════════════════════════
+function markAsConsumable(codigo){
+  const code10=codigo.startsWith('US-')?'10-'+codigo.slice(3):codigo;
+  CONS.add(code10); ss(SK.CONS,[...CONS]); renderConsList();
+  const base=baseCode(codigo);
+  ST.pending=ST.pending.filter(r=>baseCode(r.codigo)!==base);
+  ST.xlsxBlob=buildExcel(ST.meta,ST.pending);
+  document.getElementById('sPend').textContent=ST.pending.length;
+  renderTable();
+  showToast(`🗑 "${code10}" → consumibles. Quitado del reporte.`);
+}
+
+// ══════════════════════════════════════════════════════
+//  RULE MANAGEMENT
+// ══════════════════════════════════════════════════════
+let _editRuleId=null;
+
+function renderRuleList(){
+  const el=document.getElementById('ruleList');
+  if(!RULES.length){ el.innerHTML='<div style="padding:1rem;text-align:center;color:#94a3b8;font-size:12px">Sin reglas configuradas</div>'; return; }
+  el.innerHTML=RULES.map(r=>`
+    <div class="rule-item">
+      <div>
+        <div class="rule-name">${r.name}</div>
+        <div class="rule-kw">${r.keywords.join(', ')}</div>
+      </div>
+      <div>
+        ${r.threshold>0?`<span class="rule-thr">≥ $${r.threshold}</span>`:'<span style="font-size:10px;color:#94a3b8">sin umbral</span>'}
+      </div>
+      <div>
+        ${r.always?'<span class="rule-exc">SIEMPRE</span>':'<span style="font-size:10px;color:#64748b">con fecha</span>'}
+      </div>
+      <button class="toggle-btn ${r.active?'on':'off'}" onclick="toggleRule(${r.id})" title="${r.active?'Desactivar':'Activar'}"></button>
+      <button class="btn btn-outline" style="padding:3px 8px;font-size:11px" onclick="editRule(${r.id})">✏</button>
+      <button class="del-rule" onclick="deleteRule(${r.id})">×</button>
+    </div>`).join('');
+}
+
+function toggleRule(id){
+  const r=RULES.find(r=>r.id===id); if(!r) return;
+  r.active=!r.active; ss(SK.RULES,RULES); renderRuleList();
+  showToast(`Regla "${r.name}" ${r.active?'activada':'desactivada'}`);
+}
+
+function deleteRule(id){
+  if(!confirm('¿Eliminar esta regla?')) return;
+  RULES=RULES.filter(r=>r.id!==id); ss(SK.RULES,RULES); renderRuleList();
+}
+
+function openRuleModal(){ _editRuleId=null; document.getElementById('modalTitle').textContent='Nueva regla'; document.getElementById('mName').value=''; document.getElementById('mKeywords').value=''; document.getElementById('mThreshold').value='0'; document.getElementById('mAlways').value='0'; document.getElementById('ruleModal').classList.add('open'); }
+function closeRuleModal(){ document.getElementById('ruleModal').classList.remove('open'); }
+
+function editRule(id){
+  const r=RULES.find(r=>r.id===id); if(!r) return;
+  _editRuleId=id;
+  document.getElementById('modalTitle').textContent='Editar regla';
+  document.getElementById('mName').value=r.name;
+  document.getElementById('mKeywords').value=r.keywords.join(', ');
+  document.getElementById('mThreshold').value=r.threshold;
+  document.getElementById('mAlways').value=r.always?'1':'0';
+  document.getElementById('ruleModal').classList.add('open');
+}
+
+function saveRule(){
+  const name=document.getElementById('mName').value.trim();
+  const kws=document.getElementById('mKeywords').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const thr=parseFloat(document.getElementById('mThreshold').value)||0;
+  const always=document.getElementById('mAlways').value==='1';
+  if(!name||!kws.length){ showToast('⚠️ Nombre y palabras clave son obligatorios'); return; }
+  if(_editRuleId){
+    const r=RULES.find(r=>r.id===_editRuleId);
+    if(r){ r.name=name; r.keywords=kws; r.threshold=thr; r.always=always; }
+  } else {
+    const newId=Math.max(0,...RULES.map(r=>r.id))+1;
+    RULES.push({ id:newId, name, keywords:kws, threshold:thr, always, active:true });
+  }
+  ss(SK.RULES,RULES); renderRuleList(); closeRuleModal();
+  showToast(`✅ Regla "${name}" guardada`);
+}
+
+// ══════════════════════════════════════════════════════
+//  CONFIG SAVE
+// ══════════════════════════════════════════════════════
+function saveCfg(){
+  CFG.years=parseInt(document.getElementById('cfgYears').value)||5;
+  CFG.alwaysKw=document.getElementById('cfgAlwaysKw').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  ss(SK.CFG,CFG);
+  showToast('✅ Configuración guardada');
+}
+
+// ══════════════════════════════════════════════════════
+//  CONSUMABLES
+// ══════════════════════════════════════════════════════
 function renderConsList(){
-  const list=[...ST.consumables].sort();
+  const list=[...CONS].sort();
   document.getElementById('consCount').textContent=`(${list.length})`;
   document.getElementById('consList').innerHTML=list.length===0
     ?'<div style="padding:1rem;text-align:center;color:#94a3b8;font-size:12px">Lista vacía</div>'
     :list.map(c=>`<div class="cons-item"><span class="cons-code">${c}</span><button class="del-btn" onclick="removeCode('${c}')">×</button></div>`).join('');
 }
-
-function addCode(){
-  const inp=document.getElementById('newCodeInput');
-  const codes=inp.value.split(/[\s,;]+/).map(s=>s.trim()).filter(Boolean);
-  let added=0;
-  for(const c of codes){ if(!ST.consumables.has(c)){ ST.consumables.add(c); added++; } }
-  inp.value=''; renderConsList();
-  if(added) showToast(`✓ ${added} código(s) agregado(s)`);
-}
-
-function removeCode(c){ ST.consumables.delete(c); renderConsList(); }
-function clearAllCodes(){ ST.consumables.clear(); renderConsList(); }
-function sortCodes(){ ST.consumables=new Set([...ST.consumables].sort()); renderConsList(); }
-
-function markAsConsumable(codigo) {
-  // Normalize: always store the 10- version
-  const code10 = codigo.startsWith('US-') ? '10-'+codigo.slice(3) : codigo;
-
-  // Add to consumables set and save
-  ST.consumables.add(code10);
-  saveCons();
-  renderConsList();
-
-  // Remove ALL rows with this base code from pending (both 10- and US- variants)
-  const base = baseCode(codigo);
-  ST.pending = ST.pending.filter(r => baseCode(r.codigo) !== base);
-
-  // Rebuild Excel and re-render
-  ST.xlsxBlob = buildExcel(ST.meta, ST.pending);
-  renderTable();
-
-  // Update stats counter
-  document.getElementById('sPend').textContent = ST.pending.length;
-
-  showToast(`🗑 "${code10}" agregado a consumibles y quitado del reporte`);
-}
-
+function addCode(){ const inp=document.getElementById('newCodeInput'); const codes=inp.value.split(/[\s,;]+/).map(s=>s.trim()).filter(Boolean); let n=0; for(const c of codes){ if(!CONS.has(c)){ CONS.add(c); n++; } } inp.value=''; renderConsList(); if(n) showToast(`✓ ${n} código(s) agregado(s)`); }
+function removeCode(c){ CONS.delete(c); renderConsList(); }
+function clearAllCodes(){ CONS.clear(); renderConsList(); }
+function sortCodes(){ CONS=new Set([...CONS].sort()); renderConsList(); }
 function applyAndSave(){
-  saveCons();
-  // Re-process if file is loaded
+  ss(SK.CONS,[...CONS]);
   if(ST.rawRows.length>0){
-    const {pending,stats}=applyRules(ST.rawRows);
-    ST.pending=pending;
-    ST.xlsxBlob=buildExcel(ST.meta,pending);
-    renderStatsBar(stats,pending);
-    renderTable();
-    showToast('✅ Cambios guardados y reporte actualizado');
-  } else {
-    showToast('✅ Cambios guardados. Se aplicarán al cargar el próximo archivo.');
-  }
+    const {pending,stats}=runPipeline(ST.rawRows,ST.meta);
+    ST.pending=pending; ST.xlsxBlob=buildExcel(ST.meta,pending);
+    renderStatsBar(stats,pending); renderTable();
+    showToast('✅ Guardado y reporte actualizado');
+  } else showToast('✅ Guardado. Se aplica al próximo archivo.');
 }
 
-// ═══════════════════════════════════════════════
-// GOOGLE SHEETS SYNC (consumibles)
-// ═══════════════════════════════════════════════
-function setSyncStatus(type,msg){
-  const cls={ok:'dok',err:'derr',loading:'dload',idle:'didle'}[type]||'didle';
-  document.getElementById('syncStatus').innerHTML=`<span class="sdot ${cls}"></span>${msg}`;
+// ══════════════════════════════════════════════════════
+//  GOOGLE SHEETS PROXY
+// ══════════════════════════════════════════════════════
+function getSheetId(){ const m=document.getElementById('sheetsUrl').value.match(/\/d\/([a-zA-Z0-9_-]+)/); return m?m[1]:null; }
+async function proxyFetch(csvUrl){
+  const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(csvUrl)}`;
+  const res=await fetch(proxy);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const json=await res.json();
+  const text=json.contents||'';
+  if(text.includes('ServiceLogin')||text.includes('accounts.google.com'))
+    throw new Error('La hoja no es pública. Abre tu Google Sheet → Compartir → "Cualquier persona con el enlace" → Lector.');
+  return text;
 }
+
+function setSyncStatus(type,msg){ const cls={ok:'dok',err:'derr',loading:'dload',idle:'didle'}[type]||'didle'; document.getElementById('syncStatus').innerHTML=`<span class="sdot ${cls}"></span>${msg}`; }
 
 async function syncFromSheets(){
-  const url=document.getElementById('sheetsUrl').value.trim();
+  const id=getSheetId(); if(!id){ showToast('❌ URL inválida'); return; }
   const tab=document.getElementById('sheetsTab').value.trim()||'CONSUMIBLES';
-  const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(!m){ showToast('❌ URL inválida'); return; }
-  localStorage.setItem(SK_URL,url); localStorage.setItem(SK_TAB,tab);
-  const csvUrl=`https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
-  const proxyConsUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(csvUrl)}`;
-  setSyncStatus('loading','Cargando desde Sheets…');
+  ss(SK.URL,document.getElementById('sheetsUrl').value.trim()); ss(SK.TAB,tab);
+  const url=`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
+  setSyncStatus('loading','Cargando…');
   try{
-    const res=await fetch(proxyConsUrl);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const json=await res.json();
-    const text=json.contents||'';
-    if(text.includes('ServiceLogin')||text.includes('accounts.google.com')){
-      throw new Error('La hoja no es pública. Compartela como "Cualquier persona con el enlace puede ver".');
-    }
+    const text=await proxyFetch(url);
     const codes=text.split('\n').map(l=>l.replace(/"/g,'').split(',')[0].trim()).filter(c=>c&&/^\d{2}-/.test(c));
-    ST.consumables=new Set(codes);
-    saveCons(); renderConsList();
-    setSyncStatus('ok',`${codes.length} códigos cargados — ${new Date().toLocaleTimeString()}`);
-    showToast(`✅ ${codes.length} consumibles cargados desde Sheets`);
-  } catch(e){
-    setSyncStatus('err','Error: '+e.message);
-    showToast('❌ No se pudo leer la hoja. Verifique URL y que sea pública.');
-  }
+    CONS=new Set(codes); ss(SK.CONS,[...CONS]); renderConsList();
+    setSyncStatus('ok',`${codes.length} códigos · ${new Date().toLocaleTimeString()}`);
+    showToast(`✅ ${codes.length} consumibles cargados`);
+  } catch(e){ setSyncStatus('err',e.message); showToast('❌ '+e.message); }
 }
 
 function exportForSheets(){
-  // Export codes as CSV for manual upload to Sheets
-  const codes=[...ST.consumables].sort();
-  const csv='CODIGO\n'+codes.join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download='consumibles.csv'; a.click();
-  showToast('📄 CSV descargado — súbelo a la pestaña CONSUMIBLES de tu Google Sheet');
+  const csv='CODIGO\n'+[...CONS].sort().join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='consumibles.csv'; a.click();
+  showToast('📄 CSV descargado — súbelo a la pestaña CONSUMIBLES');
 }
 
-// ═══════════════════════════════════════════════
-// PROGRESS
-// ═══════════════════════════════════════════════
-function setProgress(on, msg='', pct=0){
-  document.getElementById('progressWrap').style.display=on?'':'none';
-  document.getElementById('progressBar').style.width=pct+'%';
-  document.getElementById('progressMsg').textContent=msg||'';
+async function fetchCosts(){
+  const id=getSheetId(); if(!id){ showToast('❌ URL inválida'); return; }
+  const tab=document.getElementById('costsTab').value.trim()||'COSTOS';
+  ss(SK.CTAB,tab);
+  const url=`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?sheet=${encodeURIComponent(tab)}&tqx=out:csv`;
+  const btn=document.getElementById('btnFetchCosts'); btn.disabled=true; btn.textContent='⏳ Consultando…';
+  try{
+    const text=await proxyFetch(url);
+    let n=0;
+    for(const line of text.split('\n')){ const p=line.replace(/"/g,'').split(','); const code=p[0]?.trim(); const cost=parseFloat((p[3]||p[1]||'').trim()); if(code&&!isNaN(cost)){ ST.costsDB[code]=cost; } }
+    for(const r of ST.pending){ if(!r.costo||r.costo<=0.01){ const c=ST.costsDB[r.codigo]||ST.costsDB['10-'+baseCode(r.codigo)]; if(c!==undefined){ r.costo=c; n++; } } }
+    ST.xlsxBlob=buildExcel(ST.meta,ST.pending); renderTable();
+    showToast(`✅ ${n} costos actualizados — Excel regenerado`);
+  } catch(e){ showToast('❌ '+e.message); }
+  finally{ btn.disabled=false; btn.textContent='🔍 Consultar costos'; }
 }
 
-// ═══════════════════════════════════════════════
-// RESET
-// ═══════════════════════════════════════════════
-function resetAll(){
-  ST.pending=[]; ST.rawRows=[]; ST.meta={}; ST.xlsxBlob=null; ST.costsDB={};
-  document.getElementById('uploadZone').style.display='';
-  document.getElementById('empCard').classList.remove('on');
-  document.getElementById('statsRow').style.display='none';
-  document.getElementById('actionRow').style.display='none';
-  document.getElementById('controlsRow').style.display='none';
-  document.getElementById('tblWrap').style.display='none';
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('searchQ').value='';
-  document.getElementById('fileInput').value='';
-}
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
+function setProgress(on,msg='',pct=0){ document.getElementById('progressWrap').style.display=on?'':'none'; document.getElementById('progressBar').style.width=pct+'%'; document.getElementById('progressMsg').textContent=msg; }
 
-// ═══════════════════════════════════════════════
-// DRAG & DROP
-// ═══════════════════════════════════════════════
-const uz=document.getElementById('uploadZone');
-const fi=document.getElementById('fileInput');
+function resetAll(){ ST.pending=[];ST.rawRows=[];ST.meta={};ST.xlsxBlob=null;ST.costsDB={}; document.getElementById('uploadZone').style.display=''; document.getElementById('empCard').classList.remove('on'); ['statsRow','actionRow','controlsRow','tblWrap','emptyState'].forEach(id=>document.getElementById(id).style.display='none'); document.getElementById('searchQ').value=''; document.getElementById('fileInput').value=''; }
+
+const uz=document.getElementById('uploadZone'),fi=document.getElementById('fileInput');
 uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
 uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
 uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)loadFile(f);});
 fi.addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0]);});
 
-// ═══════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════
 let _tt;
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),4000);
-}
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('show'),4500); }
 </script>
 </body>
 </html>
