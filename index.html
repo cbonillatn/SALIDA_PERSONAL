@@ -279,6 +279,11 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#f8fafc}
       <option value="0">No — aplica corte por antigüedad</option>
       <option value="1">Sí — siempre incluir sin importar fecha</option>
     </select>
+    <label>Tipo de coincidencia de palabras clave</label>
+    <select id="mStartsWith">
+      <option value="0">Coincidencia en cualquier parte de la descripción</option>
+      <option value="1">La descripción debe INICIAR con la palabra clave (evita accesorios)</option>
+    </select>
     <div class="modal-btns">
       <button class="btn btn-outline" onclick="closeRuleModal()">Cancelar</button>
       <button class="btn btn-dark" onclick="saveRule()">Guardar regla</button>
@@ -313,14 +318,15 @@ const DEFAULT_CONSUMABLES = [
 
 // Each rule: { id, name, keywords:[], threshold:number, always:bool, active:bool }
 const DEFAULT_RULES = [
-  { id:1, name:'Laptops / Portátiles',         keywords:['laptop','portatil','portátil','notebook'],            threshold:0,   always:true,  active:true },
-  { id:2, name:'Tablets',                       keywords:['tablet','ipad'],                                      threshold:0,   always:true,  active:true },
-  { id:3, name:'Celular / Smartphone',          keywords:['celular','smartphone','iphone','android','telefono'], threshold:0,   always:true,  active:true },
-  { id:4, name:'Fusionadora / Kit fusión',      keywords:['fusionadora','fusion','kit fusion','kit de fusion'],  threshold:0,   always:true,  active:true },
-  { id:5, name:'OTDR',                          keywords:['otdr'],                                               threshold:0,   always:true,  active:true },
-  { id:6, name:'EPP de alto valor',             keywords:['arnes','arnés','linea de vida','línea de vida','comelo','cinturon de posicionamiento','posicionamiento'], threshold:60, always:false, active:true },
-  { id:7, name:'Herramientas de alto valor',    keywords:['sonda','escalera','etiquetadora','camara','cámara','drone','dron','equipo de evento'], threshold:100, always:false, active:true },
-  { id:8, name:'Equipos especializados',        keywords:['medidor','reflectometro','analizador','generador','osciloscopio'], threshold:100, always:false, active:true },
+  // startsWith:true → la palabra clave debe aparecer al INICIO de la descripción (evita accesorios)
+  { id:1, name:'Laptops / Portátiles',         keywords:['laptop','portatil','portátil','notebook','portable'], threshold:0,   always:true,  active:true, startsWith:true },
+  { id:2, name:'Tablets',                       keywords:['tablet','ipad'],                                      threshold:0,   always:true,  active:true, startsWith:true },
+  { id:3, name:'Celular / Smartphone',          keywords:['celular','smartphone','iphone','android','telefono'], threshold:0,   always:true,  active:true, startsWith:true },
+  { id:4, name:'Fusionadora / Kit fusión',      keywords:['fusionadora','fusion','kit fusion','kit de fusion'],  threshold:0,   always:true,  active:true, startsWith:true },
+  { id:5, name:'OTDR',                          keywords:['otdr'],                                               threshold:0,   always:true,  active:true, startsWith:true },
+  { id:6, name:'EPP de alto valor',             keywords:['arnes','arnés','linea de vida','línea de vida','comelo','cinturon de posicionamiento'], threshold:60, always:false, active:true, startsWith:false },
+  { id:7, name:'Herramientas de alto valor',    keywords:['sonda','escalera','etiquetadora','camara','cámara','drone','dron','equipo de evento'], threshold:100, always:false, active:true, startsWith:false },
+  { id:8, name:'Equipos especializados',        keywords:['medidor','reflectometro','analizador','generador','osciloscopio','power meter','optical power','exfo','viavi','fluke','anritsu'], threshold:100, always:false, active:true, startsWith:false },
 ];
 
 const DEFAULT_CONFIG = { years: 5, alwaysKw: ['laptop','portátil','portatil','tablet','celular','smartphone','fusionadora','otdr'] };
@@ -333,6 +339,8 @@ function ss(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }cat
 
 let CFG   = ls(SK.CFG, DEFAULT_CONFIG);
 let RULES = ls(SK.RULES, DEFAULT_RULES);
+// Migrate old rules that don't have startsWith field
+RULES = RULES.map(r => ({ startsWith: false, ...r }));
 let CONS  = new Set(ls(SK.CONS, DEFAULT_CONSUMABLES));
 
 let ST = { pending:[], rawRows:[], meta:{}, costsDB:{}, xlsxBlob:null };
@@ -446,8 +454,11 @@ function paso1_antiguedad(rows, meta){
 
     const descN = normalizeStr(r.descripcion);
     const isAlways = RULES.filter(rl=>rl.active&&rl.always)
-                         .some(rl=>rl.keywords.some(kw=>descN.includes(normalizeStr(kw))))
-                  || alwaysKw.some(kw=>descN.includes(kw));
+                         .some(rl=>rl.keywords.some(kw=>{
+                           const kwN=normalizeStr(kw);
+                           return rl.startsWith ? descN.startsWith(kwN) : descN.includes(kwN);
+                         }))
+                  || alwaysKw.some(kw=>descN.startsWith(normalizeStr(kw)));
 
     if(isAlways){
       r._alwaysIncluded = true;
@@ -474,7 +485,13 @@ function paso2_categorias(rows){
 
     let matched=false, matchedRule=null;
     for(const rule of activeRules){
-      const kwMatch = rule.keywords.some(kw => descN.includes(normalizeStr(kw)));
+      const kwMatch = rule.keywords.some(kw => {
+        const kwN = normalizeStr(kw);
+        // startsWith:true → keyword must appear at the start of description (word boundary)
+        // This prevents "MICA DE TABLET" or "BASE PARA LAPTOP" from matching
+        if(rule.startsWith) return descN.startsWith(kwN) || descN.match(new RegExp('^'+kwN.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+        return descN.includes(kwN);
+      });
       if(!kwMatch) continue;
       const thrOk = rule.threshold===0 || costo===0 || costo >= rule.threshold;
       if(thrOk){ matched=true; matchedRule=rule; break; }
@@ -766,7 +783,7 @@ function renderRuleList(){
     <div class="rule-item">
       <div>
         <div class="rule-name">${r.name}</div>
-        <div class="rule-kw">${r.keywords.join(', ')}</div>
+        <div class="rule-kw">${r.keywords.join(', ')} ${r.startsWith?'<span style="color:#3b82f6;font-size:9px">[inicio]</span>':''}</div>
       </div>
       <div>
         ${r.threshold>0?`<span class="rule-thr">≥ $${r.threshold}</span>`:'<span style="font-size:10px;color:#94a3b8">sin umbral</span>'}
@@ -791,7 +808,16 @@ function deleteRule(id){
   RULES=RULES.filter(r=>r.id!==id); ss(SK.RULES,RULES); renderRuleList();
 }
 
-function openRuleModal(){ _editRuleId=null; document.getElementById('modalTitle').textContent='Nueva regla'; document.getElementById('mName').value=''; document.getElementById('mKeywords').value=''; document.getElementById('mThreshold').value='0'; document.getElementById('mAlways').value='0'; document.getElementById('ruleModal').classList.add('open'); }
+function openRuleModal(){
+  _editRuleId=null;
+  document.getElementById('modalTitle').textContent='Nueva regla';
+  document.getElementById('mName').value='';
+  document.getElementById('mKeywords').value='';
+  document.getElementById('mThreshold').value='0';
+  document.getElementById('mAlways').value='0';
+  document.getElementById('mStartsWith').value='0';
+  document.getElementById('ruleModal').classList.add('open');
+}
 function closeRuleModal(){ document.getElementById('ruleModal').classList.remove('open'); }
 
 function editRule(id){
@@ -802,6 +828,7 @@ function editRule(id){
   document.getElementById('mKeywords').value=r.keywords.join(', ');
   document.getElementById('mThreshold').value=r.threshold;
   document.getElementById('mAlways').value=r.always?'1':'0';
+  document.getElementById('mStartsWith').value=r.startsWith?'1':'0';
   document.getElementById('ruleModal').classList.add('open');
 }
 
@@ -810,13 +837,14 @@ function saveRule(){
   const kws=document.getElementById('mKeywords').value.split(',').map(s=>s.trim()).filter(Boolean);
   const thr=parseFloat(document.getElementById('mThreshold').value)||0;
   const always=document.getElementById('mAlways').value==='1';
+  const startsWith=document.getElementById('mStartsWith').value==='1';
   if(!name||!kws.length){ showToast('⚠️ Nombre y palabras clave son obligatorios'); return; }
   if(_editRuleId){
     const r=RULES.find(r=>r.id===_editRuleId);
-    if(r){ r.name=name; r.keywords=kws; r.threshold=thr; r.always=always; }
+    if(r){ r.name=name; r.keywords=kws; r.threshold=thr; r.always=always; r.startsWith=startsWith; }
   } else {
     const newId=Math.max(0,...RULES.map(r=>r.id))+1;
-    RULES.push({ id:newId, name, keywords:kws, threshold:thr, always, active:true });
+    RULES.push({ id:newId, name, keywords:kws, threshold:thr, always, startsWith, active:true });
   }
   ss(SK.RULES,RULES); renderRuleList(); closeRuleModal();
   showToast(`✅ Regla "${name}" guardada`);
